@@ -15,8 +15,9 @@ import play.api.mvc.{Call, RequestHeader}
 trait InstagramConfig extends Config {
   private lazy val instagramConfig = config.getConfig("instagram.client")
   private lazy val CLIENT_ID = instagramConfig.getString("id")
-  private lazy val SCOPES: Seq[Scope] = Seq(Scope.BASIC)
-  private lazy val CALL_BACK_URL = (req: RequestHeader, env: Environment) => Call("GET", routes.InstagramC.callback("").absoluteURL(secure = env.mode.equals(Mode.Prod))(req)).url
+  private lazy val SCOPES: Seq[Scope] = Seq(Scope.BASIC, Scope.PUBLIC_CONTENT)
+  private lazy val CALL_BACK_URL = (req: RequestHeader, env: Environment) =>
+    Call("GET", routes.InstagramC.callback("").absoluteURL(secure = env.mode.equals(Mode.Prod))(req)).url
   private lazy val SECRET = instagramConfig.getString("secret")
   val AUTH_URL: (RequestHeader, Environment) => String = (req: RequestHeader, env: Environment) =>
     (new Authentication).authURL(CLIENT_ID, CALL_BACK_URL(req, env), ResponseType.CODE, SCOPES)

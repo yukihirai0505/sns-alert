@@ -3,7 +3,7 @@ package controllers
 import javax.inject.{Inject, Singleton}
 
 import configurations.InstagramConfig
-import play.api.{Environment, Mode}
+import play.api.Environment
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.mvc._
 import services.TopService
