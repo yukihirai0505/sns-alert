@@ -12,7 +12,7 @@ trait InstagramConfig extends Config {
   private lazy val instagramConfig = config.getConfig("instagram.client")
   private lazy val CLIENT_ID = instagramConfig.getString("id")
   private lazy val SCOPES: Seq[Scope] = Seq(Scope.BASIC)
-  private lazy val CALL_BACK_URL = (req: RequestHeader) => Call("GET", routes.InstagramC.callback().absoluteURL()(req)).url
+  private lazy val CALL_BACK_URL = (req: RequestHeader) => Call("GET", routes.InstagramC.callback().absoluteURL(secure = true)(req)).url
   val SECRET = instagramConfig.getString("secret")
   val authUrl = (req: RequestHeader) => (new Authentication).authURL(CLIENT_ID, CALL_BACK_URL(req), ResponseType.CODE, SCOPES)
 }
