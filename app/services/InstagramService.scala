@@ -26,10 +26,25 @@ class InstagramService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: 
     if(account.isLogin) {
       ACCESS_TOKEN(req, code, env) flatMap {
         case Response(Some(token: AccessToken), _, _) =>
-          update(account.user.get.copy(instagramAccessToken = Some(token.token))).flatMap { _ =>
+          val newUser = account.user.get.copy(instagramAccessToken = Some(token.token))
+          update(newUser).flatMap { _ =>
+            SessionUtil.setAccount(account.session, account.copy(user = Some(newUser)))
             Future successful true
           }
         case _ => Future successful false
+      }
+    } else {
+      Future successful false
+    }
+  }
+
+  def removeToken(implicit req: Request[_]): Future[Boolean] = {
+    val account = SessionUtil.getAccount
+    if(account.isLogin) {
+      val newUser = account.user.get.copy(instagramAccessToken = None)
+      update(newUser).flatMap { _ =>
+        SessionUtil.setAccount(account.session, account.copy(user = Some(newUser)))
+        Future successful true
       }
     } else {
       Future successful false

@@ -26,4 +26,10 @@ class InstagramC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Enviro
     }
   }
 
+  def remove = Action.async { implicit req: Request[_] =>
+    removeToken.flatMap {
+      case false => Future successful Redirect(routes.LoginC.login().url)
+      case true => Future successful Redirect(routes.MyPageC.index().url)
+    }
+  }
 }
