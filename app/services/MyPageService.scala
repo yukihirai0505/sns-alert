@@ -14,6 +14,7 @@ import models.Entities.AccountEntity
 import utils.SessionUtil
 
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   * Created by yukihirai on 2017/03/20.
@@ -34,4 +35,14 @@ class MyPageService @Inject()(dbConfigProvider: DatabaseConfigProvider, implicit
     }
   }
 
+  def deleteAccount(implicit req: Request[_]): Future[Boolean] = {
+    val account : AccountEntity = SessionUtil.getAccount
+    if (account.isLogin) {
+      delete(account.user.flatMap(_.id).get).flatMap{ _ =>
+        SessionUtil.delSession(account)
+        Future successful true
+      }
+    }
+    Future successful false
+  }
 }

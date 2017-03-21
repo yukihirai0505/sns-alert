@@ -49,7 +49,9 @@ class LoginService @Inject()(dbConfigProvider: DatabaseConfigProvider, implicit 
       title = "Login"
     )
     extendValidate(loginForm.bindFromRequest()).flatMap { case (frm, user) =>
-      val viewDto: ViewDto = createViewDto(req, account, headTagInfo).copy(loginForm = Some(frm))
+      val viewDto: ViewDto = createViewDto(req, account, headTagInfo).copy(
+        loginForm = Some(frm), verifyMailForm = Some(verifyMailForm.bindFromRequest())
+      )
       if(frm.hasErrors) {
         Future successful Left(viewDto)
       } else {
@@ -60,7 +62,7 @@ class LoginService @Inject()(dbConfigProvider: DatabaseConfigProvider, implicit 
     }
   }
 
-  def doLogout(implicit req: Request[_]): Future[AccountEntity] = SessionUtil.delSession(cache, SessionUtil.getAccount)
+  def doLogout(implicit req: Request[_]): Future[AccountEntity] = SessionUtil.delSession(SessionUtil.getAccount)
 
   private def extendValidate(frm: Form[LoginForm]): Future[(Form[LoginForm], Option[UserRow])] = {
     val errors: Seq[FormError] = frm.errors

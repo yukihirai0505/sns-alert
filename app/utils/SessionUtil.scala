@@ -55,7 +55,7 @@ object SessionUtil {
     newAccount
   }
 
-  def delSession(cache: CacheApi, account: AccountEntity): Future[AccountEntity] = {
+  def delSession(account: AccountEntity)(implicit cache: CacheApi): Future[AccountEntity] = {
     delCache(cache, account.session)
     Future successful account
   }

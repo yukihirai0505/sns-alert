@@ -30,4 +30,10 @@ class MyPageC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environme
     }
   }
 
+  def delete = Action.async { implicit req: Request[_] =>
+    deleteAccount.flatMap { _ =>
+      Future successful Redirect(routes.LoginC.login().url)
+    }
+  }
+
 }
