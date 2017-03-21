@@ -3,6 +3,12 @@
 ## Top
 GET     /                           controllers.TopC.index
 
+## Login
+GET     /login                      controllers.LoginC.login
+
+## MyPage
+GET     /mypage                     controllers.MyPageC.index
+
 ## Instagram
 GET     /instagram/callback         controllers.InstagramC.callback(code: String)
 
