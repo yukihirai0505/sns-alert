@@ -19,7 +19,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
   */
 @Singleton
 class LoginC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environment, cache: CacheApi, override implicit val messagesApi: MessagesApi)
-  extends LoginService(dbConfigProvider, cache, messagesApi)
+  extends LoginService(dbConfigProvider, env, cache, messagesApi)
     with InstagramConfig
 {
 

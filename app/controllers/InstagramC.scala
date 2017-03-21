@@ -7,6 +7,7 @@ import play.api.cache.CacheApi
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.mvc._
 import services.InstagramService
+import utils.SessionUtil
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -22,7 +23,7 @@ class InstagramC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Enviro
   def callback(code: String) = Action.async { implicit req: Request[_] =>
     super.callback(code).flatMap {
       case false => Future successful Redirect(routes.LoginC.login().url)
-      case true => Future successful Redirect(routes.MyPageC.index().url)
+      case true => Future successful Redirect(routes.MyPageC.index().url).withSession(SessionUtil.getAccount(req, cache).session)
     }
   }
 

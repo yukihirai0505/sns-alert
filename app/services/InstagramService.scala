@@ -2,6 +2,7 @@ package services
 
 import javax.inject.Inject
 
+import com.yukihirai0505.Instagram
 import com.yukihirai0505.http.Response
 import com.yukihirai0505.responses.auth.AccessToken
 import configurations.InstagramConfig
@@ -23,18 +24,29 @@ class InstagramService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: 
 
   def callback(code: String)(implicit req: Request[_]): Future[Boolean] = {
     val account = SessionUtil.getAccount
-    if(account.isLogin) {
-      ACCESS_TOKEN(req, code, env) flatMap {
-        case Response(Some(token: AccessToken), _, _) =>
-          val newUser = account.user.get.copy(instagramAccessToken = Some(token.token))
-          update(newUser).flatMap { _ =>
-            SessionUtil.setAccount(account.session, account.copy(user = Some(newUser)))
-            Future successful true
+    ACCESS_TOKEN(req, code, env) flatMap {
+      case Response(Some(token: AccessToken), _, _) =>
+        new Instagram(token).getCurrentUserInfo.flatMap { response =>
+          response.body.flatMap(_.data.flatMap(_.id)) match {
+            case Some(instagramId) =>
+              if (account.isLogin) {
+                val newUser = account.user.get.copy(instagramId = Some(instagramId), instagramAccessToken = Some(token.token))
+                update(newUser).flatMap { _ =>
+                  SessionUtil.setAccount(account.session, account.copy(user = Some(newUser)))
+                  Future successful true
+                }
+              } else {
+                getByInstagramId(instagramId).flatMap {
+                  case Some(user) =>
+                    SessionUtil.setAccount(account.session, account.copy(user = Some(user)))
+                    Future successful true
+                  case None => Future successful false
+                }
+              }
+            case None => Future successful false
           }
-        case _ => Future successful false
-      }
-    } else {
-      Future successful false
+        }
+      case _ => Future successful false
     }
   }
 
