@@ -5,6 +5,8 @@ GET     /                           controllers.TopC.index
 
 ## Login
 GET     /login                      controllers.LoginC.login
+POST    /login/confirm              controllers.LoginC.confirm
+GET     /logout                     controllers.LoginC.logout
 
 ## MyPage
 GET     /mypage                     controllers.MyPageC.index

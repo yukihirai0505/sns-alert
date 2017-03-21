@@ -9,6 +9,7 @@ scalaVersion := "2.11.7"
 libraryDependencies ++= Seq(
   cache,
   ws,
+  filters,
 
   // Instagram
   "com.yukihirai0505" % "sinstagram_2.11" % "0.0.3",

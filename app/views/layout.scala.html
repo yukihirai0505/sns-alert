@@ -39,8 +39,12 @@
             <div class="col-sm-8">
               <div class="shop-menu pull-right">
                 <ul class="nav navbar-nav">
-                  <li><a href="@routes.MyPageC.index().url"><i class="fa fa-user"></i> Account</a></li>
-                  <li><a href="@routes.LoginC.login().url"><i class="fa fa-lock"></i> Login</a></li>
+                  @if(viewDto.account.exists(x => x.isLogin)){
+                    <li><a href="@routes.MyPageC.index().url"><i class="fa fa-user"></i> Account</a></li>
+                    <li><a href="@routes.LoginC.logout().url"><i class="fa fa-unlock"></i> Logout</a></li>
+                  } else {
+                    <li><a href="@routes.LoginC.login().url"><i class="fa fa-lock"></i> Login</a></li>
+                  }
                 </ul>
               </div>
             </div>

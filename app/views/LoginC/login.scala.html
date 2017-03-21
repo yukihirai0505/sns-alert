@@ -1,6 +1,6 @@
 @import dtos.ViewDto.ViewDto
-@(viewDto: ViewDto)
-
+@(viewDto: ViewDto)(implicit req: RequestHeader, messages: MessagesApi)
+@frm = @{viewDto.loginForm.get}
 @layout(viewDto) {
   <section id="form"><!--form-->
     <div class="container">
@@ -8,15 +8,21 @@
         <div class="col-sm-4 col-sm-offset-1">
           <div class="login-form"><!--login form-->
             <h2>Login to your account</h2>
-            <form action="#">
-              <input type="email" placeholder="Email Address" />
-              <input type="password" placeholder="Password"/>
+            @if(frm.hasErrors){
+              <p class="form-err"><small><i class="fa fa-exclamation-triangle"></i>
+                @messages("error.invalid.emailorpassword")
+              </small></p>
+            }
+            @helper.form(action = routes.LoginC.confirm()) {
+              @helper.CSRF.formField
+              <input type="email" name="email" placeholder="Email Address" />
+              <input type="password" name="password" placeholder="Password"/>
               <span>
                 <input type="checkbox" class="checkbox">
                 Keep me signed in
               </span>
               <button type="submit" class="btn btn-default">Login</button>
-            </form>
+            }
           </div><!--/login form-->
         </div>
         <div class="col-sm-1">

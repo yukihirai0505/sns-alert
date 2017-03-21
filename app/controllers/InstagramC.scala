@@ -13,6 +13,9 @@ import services.InstagramService
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
+/**
+  * Created by yukihirai on 2017/03/18.
+  */
 @Singleton
 class InstagramC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environment)
   extends InstagramService(dbConfigProvider)

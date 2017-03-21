@@ -1,12 +1,19 @@
 package dtos
 
+import play.api.data.Form
+
+import forms.LoginForms.LoginForm
+import models.Entities.AccountEntity
+
 /**
   * author Yuki Hirai on 2017/03/21.
   */
 object ViewDto {
 
   case class ViewDto(
-                      headTagInfo: HeadTagInfo
+                      account: Option[AccountEntity] = None
+                      , headTagInfo: HeadTagInfo
+                      , loginForm: Option[Form[LoginForm]] = None
                     )
 
   case class HeadTagInfo(
