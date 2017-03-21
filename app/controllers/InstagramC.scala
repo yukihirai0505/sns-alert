@@ -22,8 +22,8 @@ class InstagramC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Enviro
 
   def callback(code: String) = Action.async { implicit req: Request[_] =>
     super.callback(code).flatMap {
-      case false => Future successful Redirect(routes.LoginC.login().url)
-      case true => Future successful Redirect(routes.MyPageC.index().url).withSession(SessionUtil.getAccount(req, cache).session)
+      case None => Future successful Redirect(routes.LoginC.login().url)
+      case Some(account) => Future successful Redirect(routes.MyPageC.index().url).withSession(account.session)
     }
   }
 

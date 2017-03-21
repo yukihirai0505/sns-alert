@@ -7,6 +7,7 @@ import com.yukihirai0505.http.Response
 import com.yukihirai0505.responses.auth.AccessToken
 import configurations.InstagramConfig
 import daos.UserDAO
+import models.Entities.AccountEntity
 import play.api.Environment
 import play.api.cache.CacheApi
 import play.api.db.slick.DatabaseConfigProvider
@@ -22,7 +23,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class InstagramService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environment, implicit val cache: CacheApi)
   extends UserDAO(dbConfigProvider) with Controller with InstagramConfig {
 
-  def callback(code: String)(implicit req: Request[_]): Future[Boolean] = {
+  def callback(code: String)(implicit req: Request[_]): Future[Option[AccountEntity]] = {
     val account = SessionUtil.getAccount
     ACCESS_TOKEN(req, code, env) flatMap {
       case Response(Some(token: AccessToken), _, _) =>
@@ -33,20 +34,20 @@ class InstagramService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: 
                 val newUser = account.user.get.copy(instagramId = Some(instagramId), instagramAccessToken = Some(token.token))
                 update(newUser).flatMap { _ =>
                   SessionUtil.setAccount(account.session, account.copy(user = Some(newUser)))
-                  Future successful true
+                  Future successful Some(account)
                 }
               } else {
                 getByInstagramId(instagramId).flatMap {
                   case Some(user) =>
-                    SessionUtil.setAccount(account.session, account.copy(user = Some(user)))
-                    Future successful true
-                  case None => Future successful false
+                    val newAccount = SessionUtil.refreshSession(account.copy(user = Some(user)))
+                    Future successful Some(newAccount)
+                  case None => Future successful None
                 }
               }
-            case None => Future successful false
+            case None => Future successful None
           }
         }
-      case _ => Future successful false
+      case _ => Future successful None
     }
   }
 
