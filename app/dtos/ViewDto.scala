@@ -3,6 +3,7 @@ package dtos
 import play.api.data.Form
 
 import forms.LoginForms.LoginForm
+import forms.VerifyMailForms.VerifyMailForm
 import models.Entities.AccountEntity
 
 /**
@@ -14,6 +15,7 @@ object ViewDto {
                       account: Option[AccountEntity] = None
                       , headTagInfo: HeadTagInfo
                       , loginForm: Option[Form[LoginForm]] = None
+                      , verifyMailForm: Option[Form[VerifyMailForm]] = None
                     )
 
   case class HeadTagInfo(

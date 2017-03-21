@@ -19,6 +19,9 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-slick-evolutions" % "2.0.0",
   "org.postgresql" % "postgresql" % "9.4-1201-jdbc41",
 
+  // Mail
+  "com.typesafe.play" %% "play-mailer" % "5.0.0",
+
   // TEST
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test
 )

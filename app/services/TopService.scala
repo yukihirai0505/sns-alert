@@ -19,12 +19,12 @@ import scala.concurrent.Future
 /**
   * Created by yukihirai on 2017/03/20.
   */
-class TopService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environment, cache: CacheApi, implicit val messagesApi: MessagesApi)
+class TopService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environment, implicit val cache: CacheApi, implicit val messagesApi: MessagesApi)
   extends Controller with InstagramConfig with BaseTrait {
 
   def getIndexViewDto(implicit req: Request[_]): Future[Either[ViewDto, ViewDto]] = {
-    val account: AccountEntity = SessionUtil.getAccount(cache, req)
-    val headTagInfo = HeadTagInfo(title = "HOME")
+    val account: AccountEntity = SessionUtil.getAccount
+    val headTagInfo = HeadTagInfo(title = "Home")
     val viewDto: ViewDto = createViewDto(req, account, headTagInfo)
     Future.successful {
       if (account.isLogin) {

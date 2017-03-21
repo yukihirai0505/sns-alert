@@ -10,8 +10,8 @@ import play.api.mvc._
 
 import services.TopService
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 /**
   * Created by yukihirai on 2017/03/18.
@@ -20,6 +20,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class TopC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environment, cache: CacheApi, override implicit val messagesApi: MessagesApi)
   extends TopService(dbConfigProvider, env, cache, messagesApi)
 {
+
 
   def index: Action[AnyContent] = Action.async { implicit req: Request[_] =>
     getIndexViewDto.flatMap {

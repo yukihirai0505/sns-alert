@@ -8,6 +8,10 @@ GET     /login                      controllers.LoginC.login
 POST    /login/confirm              controllers.LoginC.confirm
 GET     /logout                     controllers.LoginC.logout
 
+## SignUp
+POST    /sign-up                    controllers.SignUpC.index
+GET     /sign-up/:hash              controllers.SignUpC.signUp(hash: String)
+
 ## MyPage
 GET     /mypage                     controllers.MyPageC.index
 

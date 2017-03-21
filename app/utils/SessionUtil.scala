@@ -16,7 +16,7 @@ object SessionUtil {
   /**
     * Get account from cache related with session
     */
-  def getAccount(cache: CacheApi, r: RequestHeader) = {
+  def getAccount(implicit r: RequestHeader, cache: CacheApi) = {
 
     val account: AccountEntity = if (hasSessionId(r)) {
       val session: (String, String) = getSession(r)
@@ -32,7 +32,7 @@ object SessionUtil {
     val tmpHistory: Seq[HistoryEntity] = account.history.fold(Seq.empty[HistoryEntity]){e =>e.zipWithIndex.withFilter(x => x._2 > (e.size - historyLimit)).map(x => x._1)}
     val history: Seq[HistoryEntity] = tmpHistory :+ HistoryEntity(method = r.method, path= r.path)
     val entity = account.copy(history = Some(history))
-    setAccount(cache, entity.session, entity)
+    setAccount(entity.session, entity)
     entity
   }
 
@@ -44,13 +44,13 @@ object SessionUtil {
     }
   }
 
-  def setAccount(cache: CacheApi, session: (String, String), account: AccountEntity): Unit = {
+  def setAccount(session: (String, String), account: AccountEntity)(implicit cache: CacheApi): Unit = {
       setCache(cache, session, account)
   }
 
-  def refreshSession(cache: CacheApi, account: AccountEntity): AccountEntity = {
+  def refreshSession(account: AccountEntity)(implicit cache: CacheApi): AccountEntity = {
     val newAccount = account.copy(session = makeSessionId)
-    setAccount(cache, newAccount.session, newAccount)
+    setAccount(newAccount.session, newAccount)
     delCache(cache, account.session)
     newAccount
   }

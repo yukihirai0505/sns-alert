@@ -20,4 +20,9 @@ object Entities {
     }
   }
 
+  case class VerifyMailEntity(
+                               session: (String, String)
+                               , email: Option[String] = None
+                               , password: Option[String] = None
+                             )
 }

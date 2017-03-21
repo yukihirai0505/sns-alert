@@ -1,6 +1,8 @@
 @import dtos.ViewDto.ViewDto
+@import views.html.common.error
 @(viewDto: ViewDto)(implicit req: RequestHeader, messages: MessagesApi)
-@frm = @{viewDto.loginForm.get}
+@loginFrm = @{viewDto.loginForm.get}
+@verifyFrm = @{viewDto.verifyMailForm.get}
 @layout(viewDto) {
   <section id="form"><!--form-->
     <div class="container">
@@ -8,7 +10,7 @@
         <div class="col-sm-4 col-sm-offset-1">
           <div class="login-form"><!--login form-->
             <h2>Login to your account</h2>
-            @if(frm.hasErrors){
+            @if(loginFrm.hasErrors){
               <p class="form-err"><small><i class="fa fa-exclamation-triangle"></i>
                 @messages("error.invalid.emailorpassword")
               </small></p>
@@ -31,11 +33,13 @@
         <div class="col-sm-4">
           <div class="signup-form"><!--sign up form-->
             <h2>New User Signup!</h2>
-            <form action="#">
-              <input type="email" placeholder="Email Address"/>
-              <input type="password" placeholder="Password"/>
+            @error(verifyFrm("globalError"))
+            @helper.form(action = routes.SignUpC.index()) {
+              @helper.CSRF.formField
+              <input type="email" name="email" placeholder="Email Address"/>
+              <input type="password" name="password" placeholder="Password"/>
               <button type="submit" class="btn btn-default">Signup</button>
-            </form>
+            }
           </div><!--/sign up form-->
         </div>
       </div>

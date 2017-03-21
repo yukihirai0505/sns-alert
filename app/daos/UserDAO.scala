@@ -30,6 +30,10 @@ class UserDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
     db.run(User.filter(_.id === id).result.headOption)
   }
 
+  def getByEmail(email: String): Future[Option[UserRow]] = {
+    db.run(User.filter(_.email === email).result.headOption)
+  }
+
   def getByEmailAndPass(email: String, pass: String): Future[Option[UserRow]] = {
     db.run(User.filter(_.email === email).filter(_.password === pass).result.headOption)
   }

@@ -1,0 +1,7 @@
+@(field: Field)(implicit messagesApi: MessagesApi)
+
+@if(field.hasErrors) {
+  <p class="validate-txt"><small><i class="fa fa-exclamation-triangle"></i>
+    @field.errors.map(x => messagesApi(x.message, x.args: _*)).mkString(" ")
+  </small></p>
+}

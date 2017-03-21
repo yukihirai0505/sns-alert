@@ -18,11 +18,11 @@ import scala.concurrent.Future
 /**
   * Created by yukihirai on 2017/03/20.
   */
-class MyPageService @Inject()(dbConfigProvider: DatabaseConfigProvider, cache: CacheApi, implicit val messagesApi: MessagesApi)
+class MyPageService @Inject()(dbConfigProvider: DatabaseConfigProvider, implicit val cache: CacheApi, implicit val messagesApi: MessagesApi)
   extends UserDAO(dbConfigProvider) with Controller with BaseTrait with I18nSupport {
 
   def getMyPageViewDto(implicit req: Request[_]): Future[Either[ViewDto, ViewDto]] = {
-    val account: AccountEntity = SessionUtil.getAccount(cache, req)
+    val account: AccountEntity = SessionUtil.getAccount
     val headTagInfo = HeadTagInfo(
       title = "MyPage"
     )
