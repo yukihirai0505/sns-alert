@@ -16,6 +16,7 @@ object ViewDto {
                       , headTagInfo: HeadTagInfo
                       , loginForm: Option[Form[LoginForm]] = None
                       , verifyMailForm: Option[Form[VerifyMailForm]] = None
+                      , instagramAuthUrl: Option[String] = None
                     )
 
   case class HeadTagInfo(

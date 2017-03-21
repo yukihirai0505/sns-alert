@@ -2,15 +2,16 @@ package services
 
 import javax.inject.Inject
 
+import configurations.InstagramConfig
 import play.api.cache.CacheApi
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Controller, Request}
-
 import controllers.BaseTrait
 import daos.UserDAO
 import dtos.ViewDto.{HeadTagInfo, ViewDto}
 import models.Entities.AccountEntity
+import play.api.Environment
 import utils.SessionUtil
 
 import scala.concurrent.Future
@@ -19,15 +20,18 @@ import scala.concurrent.ExecutionContext.Implicits.global
 /**
   * Created by yukihirai on 2017/03/20.
   */
-class MyPageService @Inject()(dbConfigProvider: DatabaseConfigProvider, implicit val cache: CacheApi, implicit val messagesApi: MessagesApi)
-  extends UserDAO(dbConfigProvider) with Controller with BaseTrait with I18nSupport {
+class MyPageService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environment, implicit val cache: CacheApi, implicit val messagesApi: MessagesApi)
+  extends UserDAO(dbConfigProvider) with Controller with BaseTrait with I18nSupport with InstagramConfig{
 
   def getMyPageViewDto(implicit req: Request[_]): Future[Either[ViewDto, ViewDto]] = {
     val account: AccountEntity = SessionUtil.getAccount
     val headTagInfo = HeadTagInfo(
       title = "MyPage"
     )
-    val viewDto: ViewDto = createViewDto(req, account, headTagInfo).copy(account = Some(account))
+    val viewDto: ViewDto = createViewDto(req, account, headTagInfo).copy(
+      account = Some(account)
+      , instagramAuthUrl = Some(AUTH_URL(req, env))
+    )
     Future successful {
       if(account.isLogin) {
         Right(viewDto)

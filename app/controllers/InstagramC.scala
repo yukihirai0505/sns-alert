@@ -2,10 +2,8 @@ package controllers
 
 import javax.inject._
 
-import com.yukihirai0505.http.Response
-import com.yukihirai0505.responses.auth.AccessToken
-import configurations.InstagramConfig
 import play.api.Environment
+import play.api.cache.CacheApi
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.mvc._
 import services.InstagramService
@@ -17,16 +15,14 @@ import scala.concurrent.ExecutionContext.Implicits.global
   * Created by yukihirai on 2017/03/18.
   */
 @Singleton
-class InstagramC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environment)
-  extends InstagramService(dbConfigProvider)
-    with InstagramConfig
+class InstagramC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environment, cache: CacheApi)
+  extends InstagramService(dbConfigProvider, env, cache)
 {
 
   def callback(code: String) = Action.async { implicit req: Request[_] =>
-    println(code)
-    ACCESS_TOKEN(req, code, env) flatMap {
-      case Response(Some(token: AccessToken), _, _) => Future successful Ok(token.token)
-      case _ => Future successful BadRequest("An error")
+    super.callback(code).flatMap {
+      case false => Future successful Redirect(routes.LoginC.login().url)
+      case true => Future successful Redirect(routes.MyPageC.index().url)
     }
   }
 

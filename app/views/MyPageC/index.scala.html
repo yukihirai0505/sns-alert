@@ -24,6 +24,7 @@
                     <label>Keywords with comma (ex: hoge, fuga)</label>
                   </div>
                   <input type="text" placeholder="ex: hoge, fuga">
+                  <a class="btn btn-default" href="@viewDto.instagramAuthUrl.getOrElse("")">Connect with Instagram</a><br>
                   <a class="btn btn-primary" href="">Save</a><br>
                 </form>
                 @helper.form(routes.MyPageC.delete()){

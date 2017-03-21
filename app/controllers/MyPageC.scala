@@ -19,7 +19,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
   */
 @Singleton
 class MyPageC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environment, cache: CacheApi, override implicit val messagesApi: MessagesApi)
-  extends MyPageService(dbConfigProvider, cache, messagesApi)
+  extends MyPageService(dbConfigProvider, env, cache, messagesApi)
     with InstagramConfig
 {
 

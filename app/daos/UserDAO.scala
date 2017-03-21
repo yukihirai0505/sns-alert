@@ -26,6 +26,12 @@ class UserDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
     }
   }
 
+  def update(user: UserRow): Future[String] = {
+    db.run(User.filter(_.id === user.id.get).update(user)).map(_ => "User successfully updated").recover {
+      case ex : Exception => ex.getCause.getMessage
+    }
+  }
+
   def getById(id: Int): Future[Option[UserRow]] = {
     db.run(User.filter(_.id === id).result.headOption)
   }
