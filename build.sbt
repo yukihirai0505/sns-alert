@@ -10,6 +10,8 @@ libraryDependencies ++= Seq(
   cache,
   ws,
   filters,
+  // Akka
+  "com.enragedginger" %% "akka-quartz-scheduler" % "1.6.0-akka-2.4.x",
 
   // Instagram
   "com.yukihirai0505" % "sinstagram_2.11" % "0.0.3",

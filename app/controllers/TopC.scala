@@ -21,7 +21,6 @@ class TopC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environment,
   extends TopService(dbConfigProvider, env, cache, messagesApi)
 {
 
-
   def index: Action[AnyContent] = Action.async { implicit req: Request[_] =>
     getIndexViewDto.flatMap {
       case Left(v) => Future successful Ok(views.html.TopC.index(v)).withSession(v.account.get.session)
