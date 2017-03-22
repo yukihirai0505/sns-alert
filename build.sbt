@@ -13,6 +13,8 @@ libraryDependencies ++= Seq(
 
   // Instagram
   "com.yukihirai0505" % "sinstagram_2.11" % "0.0.3",
+  // Twitter
+  "com.danielasfregola" %% "twitter4s" % "5.0",
 
   // DB
   "com.typesafe.play" %% "play-slick" % "2.0.0",
