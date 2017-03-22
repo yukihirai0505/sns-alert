@@ -14,6 +14,7 @@ GET     /sign-up/:hash              controllers.SignUpC.signUp(hash: String)
 
 ## MyPage
 GET     /mypage                     controllers.MyPageC.index
+POST    /mypage/update              controllers.MyPageC.update
 POST    /mypage/delete              controllers.MyPageC.delete
 
 ## Instagram

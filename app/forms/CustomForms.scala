@@ -23,8 +23,17 @@ object LoginForms extends CustomValidate {
   case class LoginForm(email: String, password: String)(implicit messagesApi: MessagesApi)
   def loginForm(implicit messagesApi: MessagesApi) = Form(
     mapping(
-      "email" -> email
+      "email" -> emailValidate
       , "password" -> passwordValidate
     )(LoginForm.apply)(LoginForm.unapply)
+  )
+}
+
+object MyPageForms extends CustomValidate {
+  case class MyPageForm(keywords: Option[String])(implicit messagesApi: MessagesApi)
+  def myPageForm(implicit messagesApi: MessagesApi) = Form(
+    mapping(
+      "keywords" -> optional(text)
+    )(MyPageForm.apply)(MyPageForm.unapply)
   )
 }

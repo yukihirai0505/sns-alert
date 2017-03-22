@@ -6,12 +6,15 @@ import configurations.InstagramConfig
 import play.api.cache.CacheApi
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Controller, Request}
+import play.api.mvc.{Controller, Request, RequestHeader}
+
 import controllers.BaseTrait
 import daos.UserDAO
 import dtos.ViewDto.{HeadTagInfo, ViewDto}
 import models.Entities.AccountEntity
 import play.api.Environment
+
+import forms.MyPageForms
 import utils.SessionUtil
 
 import scala.concurrent.Future
@@ -21,29 +24,42 @@ import scala.concurrent.ExecutionContext.Implicits.global
   * Created by yukihirai on 2017/03/20.
   */
 class MyPageService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environment, implicit val cache: CacheApi, implicit val messagesApi: MessagesApi)
-  extends UserDAO(dbConfigProvider) with Controller with BaseTrait with I18nSupport with InstagramConfig{
+  extends UserDAO(dbConfigProvider) with Controller with BaseTrait with I18nSupport with InstagramConfig {
+
+  val account: (RequestHeader) => AccountEntity = (req: RequestHeader) => SessionUtil.getAccount(req, cache)
+
+  val viewDto: (RequestHeader, String) => ViewDto = (req: RequestHeader, headTitle: String) =>
+    createViewDto(req, account(req), HeadTagInfo(title = headTitle)).copy(
+      instagramAuthUrl = Some(AUTH_URL(req, env))
+    )
 
   def getMyPageViewDto(implicit req: Request[_]): Future[Either[ViewDto, ViewDto]] = {
-    val account: AccountEntity = SessionUtil.getAccount
-    val headTagInfo = HeadTagInfo(
-      title = "MyPage"
-    )
-    val viewDto: ViewDto = createViewDto(req, account, headTagInfo).copy(
-      account = Some(account)
-      , instagramAuthUrl = Some(AUTH_URL(req, env))
-    )
+    val v = viewDto(req, "MyPage")
     Future successful {
-      if(account.isLogin) {
-        Right(viewDto)
-      }else Left(viewDto)
+      if (account(req).isLogin) {
+        Right(v)
+      } else Left(v)
+    }
+  }
+
+  def updateAccount(implicit req: Request[_]): Future[Either[ViewDto, ViewDto]] = {
+    val frm = MyPageForms.myPageForm.bindFromRequest()
+    val v = viewDto(req, "MyPage")
+    if (frm.hasErrors || !account(req).isLogin) {
+      Future successful Left(v)
+    } else {
+      val newUser = account(req).user.get.copy(keywords = frm.get.keywords)
+      update(newUser).flatMap { _ =>
+        SessionUtil.setAccount(account(req).session, account(req).copy(user = Some(newUser)))
+        Future successful Right(v)
+      }
     }
   }
 
   def deleteAccount(implicit req: Request[_]): Future[Boolean] = {
-    val account : AccountEntity = SessionUtil.getAccount
-    if (account.isLogin) {
-      delete(account.user.flatMap(_.id).get).flatMap{ _ =>
-        SessionUtil.delSession(account)
+    if (account(req).isLogin) {
+      delete(account(req).user.flatMap(_.id).get).flatMap { _ =>
+        SessionUtil.delSession(account(req))
         Future successful true
       }
     }

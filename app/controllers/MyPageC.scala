@@ -30,6 +30,15 @@ class MyPageC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environme
     }
   }
 
+  def update = Action.async { implicit req: Request[_] =>
+    updateAccount.flatMap {
+      case Left(v) => if (v.account.exists(_.isLogin)) {
+        Future successful Ok(views.html.MyPageC.index(v))
+      }else Future successful Redirect(routes.LoginC.login().url)
+      case Right(_) => Future successful Redirect(routes.MyPageC.index().url)
+    }
+  }
+
   def delete = Action.async { implicit req: Request[_] =>
     deleteAccount.flatMap { _ =>
       Future successful Redirect(routes.LoginC.login().url)

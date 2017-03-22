@@ -54,7 +54,7 @@ class InstagramService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: 
   def removeToken(implicit req: Request[_]): Future[Boolean] = {
     val account = SessionUtil.getAccount
     if(account.isLogin) {
-      val newUser = account.user.get.copy(instagramAccessToken = None)
+      val newUser = account.user.get.copy(instagramId = None, instagramAccessToken = None)
       update(newUser).flatMap { _ =>
         SessionUtil.setAccount(account.session, account.copy(user = Some(newUser)))
         Future successful true
