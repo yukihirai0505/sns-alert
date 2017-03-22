@@ -22,7 +22,8 @@ class GlobalSetting @Inject()(lifecycle: ApplicationLifecycle){
   Logger.info("Start application...")
   val system = ActorSystem("AlertMail")
   val actor = system.actorOf(Props(classOf[AlertMail]))
-  QuartzSchedulerExtension(system).schedule("AlertMailEveryHour", actor, "メール送信")
+  // QuartzSchedulerExtension(system).schedule("AlertMailEveryHour", actor, "メール送信")
+  QuartzSchedulerExtension(system).schedule("Every5Seconds", actor, "メール送信") // テスト
   lifecycle.addStopHook { () =>
     Future.successful(null)
   }

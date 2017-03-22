@@ -2,6 +2,7 @@ package actors
 
 import javax.inject.Singleton
 
+import play.api.Logger.logger
 import play.api.Play
 import play.api.db.slick.DatabaseConfigProvider
 
@@ -20,7 +21,7 @@ class AlertMail extends Actor {
 
   override def receive = {
     case msg: String =>
-      println(msg)
+      logger.info(msg)
       // FIXME is it possible inject DatabaseConfigProvider??
       def listAll = {
         val dbConfig = DatabaseConfigProvider.get[JdbcProfile](Play.current)
@@ -29,7 +30,7 @@ class AlertMail extends Actor {
         db.run(User.result)
       }
       listAll.flatMap { users =>
-        Future successful users.foreach(u => println(u.email))
+        Future successful users.foreach(u => logger.info(u.email))
       }
   }
 
