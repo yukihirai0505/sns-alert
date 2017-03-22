@@ -20,10 +20,8 @@ class UserDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   import driver.api._
 
 
-  def add(user: UserRow): Future[String] = {
-    db.run(User += user).map(_ => "User successfully added").recover {
-      case ex : Exception => ex.getCause.getMessage
-    }
+  def add(user: UserRow): Future[UserRow] = {
+    db.run(User returning User.map(_.id) += user).map(newId => user.copy(id = Some(newId)))
   }
 
   def update(user: UserRow): Future[String] = {

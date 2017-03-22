@@ -59,8 +59,8 @@ class SignUpService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Env
     entity match {
       case Some(e) =>
         val newUser = UserRow(email = e.email.get, password = HashUtil.passwordGenerator(e.password.get))
-        add(newUser).flatMap { _ =>
-          val newAccount = account.copy(user = Some(newUser))
+        add(newUser).flatMap { user =>
+          val newAccount = account.copy(user = Some(user))
           SessionUtil.setAccount(newAccount.session, newAccount)
           Future successful Right(newAccount)
         }
