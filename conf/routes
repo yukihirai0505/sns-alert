@@ -21,5 +21,9 @@ POST    /mypage/delete              controllers.MyPageC.delete
 GET     /instagram/callback         controllers.InstagramC.callback(code: String)
 GET     /instagram/remove           controllers.InstagramC.remove
 
+## Facebook
+GET     /facebook/test              controllers.FacebookC.test
+GET     /facebook/callback          controllers.FacebookC.callback(code: String)
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

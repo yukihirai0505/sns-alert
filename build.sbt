@@ -2,7 +2,12 @@ name := """sns-alert"""
 
 version := "1.0-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val root = (project in file("."))
+  .enablePlugins(PlayScala)
+  .aggregate(spracebook)
+  .dependsOn(spracebook)
+// Facebook
+lazy val spracebook = uri("git://github.com/jdauphant/spracebook.git")
 
 scalaVersion := "2.11.7"
 
