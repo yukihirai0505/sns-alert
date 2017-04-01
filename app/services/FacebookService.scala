@@ -2,8 +2,7 @@ package services
 
 import javax.inject.Inject
 
-import akka.actor.ActorSystem
-import akka.util.Timeout
+import com.yukihirai0505.sFacebook.auth.AccessToken
 import configurations.FacebookConfig
 import daos.UserDAO
 import models.Entities.AccountEntity
@@ -14,7 +13,6 @@ import play.api.mvc.{Controller, Request}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.concurrent.duration._
 import scala.language.postfixOps
 
 
@@ -27,8 +25,8 @@ class FacebookService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: E
   def callback(code: String)(implicit req: Request[_]): Future[Option[AccountEntity]] = {
     ACCESS_TOKEN(code, req, env).flatMap { r =>
       r.body match {
-        case Some(token) =>
-          println(token)
+        case Some(token: AccessToken) =>
+          println(token.token)
           Future successful None
         case None => Future successful None
       }
