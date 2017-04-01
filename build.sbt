@@ -4,10 +4,10 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala)
-  .aggregate(spracebook)
-  .dependsOn(spracebook)
+  .aggregate(sFacebook)
+  .dependsOn(sFacebook)
 // Facebook
-lazy val spracebook = uri("git://github.com/jdauphant/spracebook.git")
+lazy val sFacebook = uri("git://github.com/yukihirai0505/sFacebook.git#cf97db5092f2d30de8036dd81c6ddb0c903f5eec")
 
 scalaVersion := "2.11.7"
 
