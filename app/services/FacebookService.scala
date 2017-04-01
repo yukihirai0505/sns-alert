@@ -3,6 +3,7 @@ package services
 import javax.inject.Inject
 
 import com.yukihirai0505.sFacebook.auth.AccessToken
+import com.yukihirai0505.sFacebook.http.Response
 import configurations.FacebookConfig
 import daos.UserDAO
 import models.Entities.AccountEntity
@@ -23,13 +24,11 @@ class FacebookService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: E
   extends UserDAO(dbConfigProvider) with Controller with FacebookConfig {
 
   def callback(code: String)(implicit req: Request[_]): Future[Option[AccountEntity]] = {
-    ACCESS_TOKEN(code, req, env).flatMap { r =>
-      r.body match {
-        case Some(token: AccessToken) =>
-          println(token.token)
-          Future successful None
-        case None => Future successful None
-      }
+    ACCESS_TOKEN(code, req, env).flatMap {
+      case Response(Some(token: AccessToken), _, _) =>
+        println(token.token)
+        Future successful None
+      case _ => Future successful None
     }
   }
 }
