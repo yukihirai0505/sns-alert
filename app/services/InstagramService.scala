@@ -2,9 +2,8 @@ package services
 
 import javax.inject.Inject
 
-import com.yukihirai0505.Instagram
-import com.yukihirai0505.http.Response
-import com.yukihirai0505.responses.auth.AccessToken
+import com.yukihirai0505.sInstagram.Instagram
+import com.yukihirai0505.sInstagram.responses.auth.AccessToken
 import configurations.InstagramConfig
 import daos.UserDAO
 import models.Entities.AccountEntity
@@ -26,9 +25,9 @@ class InstagramService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: 
   def callback(code: String)(implicit req: Request[_]): Future[Option[AccountEntity]] = {
     val account = SessionUtil.getAccount
     ACCESS_TOKEN(req, code, env) flatMap {
-      case Response(Some(token: AccessToken), _, _) =>
+      case Some(token: AccessToken) =>
         new Instagram(token).getCurrentUserInfo.flatMap { response =>
-          response.body.flatMap(_.data.flatMap(_.id)) match {
+          response.flatMap(_.data.id) match {
             case Some(instagramId) =>
               if (account.isLogin) {
                 val newUser = account.user.get.copy(instagramId = Some(instagramId), instagramAccessToken = Some(token.token))

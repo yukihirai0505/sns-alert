@@ -27,6 +27,7 @@ class FacebookService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: E
     ACCESS_TOKEN(code, req, env).flatMap {
       case Response(Some(token: AccessToken), _, _) =>
         println(token.token)
+        // TODO: save data and login following instagram callback
         Future successful None
       case _ => Future successful None
     }

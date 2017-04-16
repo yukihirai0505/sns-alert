@@ -1,9 +1,9 @@
 package configurations
 
-import com.yukihirai0505.Authentication
-import com.yukihirai0505.http.Response
-import com.yukihirai0505.model.{ResponseType, Scope}
-import com.yukihirai0505.responses.auth.Auth
+
+import com.yukihirai0505.sInstagram.InstagramAuth
+import com.yukihirai0505.sInstagram.model.{ResponseType, Scope}
+import com.yukihirai0505.sInstagram.responses.auth.Auth
 import controllers.routes
 import dispatch.Future
 import play.api.{Environment, Mode}
@@ -20,7 +20,7 @@ trait InstagramConfig extends Config {
     Call("GET", routes.InstagramC.callback("").absoluteURL(secure = env.mode.equals(Mode.Prod))(req)).url
   private lazy val SECRET = instagramConfig.getString("secret")
   val AUTH_URL: (RequestHeader, Environment) => String = (req: RequestHeader, env: Environment) =>
-    (new Authentication).authURL(CLIENT_ID, CALL_BACK_URL(req, env), ResponseType.CODE, SCOPES)
-  val ACCESS_TOKEN: (RequestHeader, String, Environment) => Future[Response[Auth]] = (req: RequestHeader, code: String, env: Environment) =>
-    (new Authentication).requestToken(CLIENT_ID, SECRET, CALL_BACK_URL(req, env), code)
+    (new InstagramAuth).authURL(CLIENT_ID, CALL_BACK_URL(req, env), ResponseType.CODE, SCOPES)
+  val ACCESS_TOKEN: (RequestHeader, String, Environment) => Future[Option[Auth]] = (req: RequestHeader, code: String, env: Environment) =>
+    (new InstagramAuth).requestToken(CLIENT_ID, SECRET, CALL_BACK_URL(req, env), code)
 }
