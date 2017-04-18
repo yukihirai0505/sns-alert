@@ -19,11 +19,12 @@ class GlobalModule extends AbstractModule {
   }
 }
 class GlobalSetting @Inject()(lifecycle: ApplicationLifecycle){
+  /***
   Logger.info("Start application...")
   val system = ActorSystem("AlertMail")
   val actor = system.actorOf(Props(classOf[AlertMail]))
   QuartzSchedulerExtension(system).schedule("AlertMailEveryHour", actor, "メール送信")
   lifecycle.addStopHook { () =>
     Future.successful(null)
-  }
+  }***/
 }
