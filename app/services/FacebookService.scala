@@ -25,7 +25,7 @@ class FacebookService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: E
 
   def callback(code: String)(implicit req: Request[_]): Future[Option[AccountEntity]] = {
     ACCESS_TOKEN(code, req, env).flatMap {
-      case Response(Some(token: AccessToken), _, _) =>
+      case Some(token: AccessToken) =>
         println(token.token)
         // TODO: save data and login following instagram callback
         Future successful None
