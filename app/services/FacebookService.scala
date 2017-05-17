@@ -76,6 +76,7 @@ class FacebookService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: E
       val user = account.user.get
       val message = frm.get.message
       new Facebook(AccessToken(user.facebookAccessToken.get)).publishPost(user.facebookId.get, Some(message)).flatMap { response =>
+        // TODO: save post id and time to db
         println(s"post id: ${response.get.id}")
         Future successful true
       }

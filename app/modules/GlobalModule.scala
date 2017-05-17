@@ -19,6 +19,7 @@ class GlobalModule extends AbstractModule {
   }
 }
 class GlobalSetting @Inject()(lifecycle: ApplicationLifecycle){
+  // TODO: delete facebook post automatically
   /***
   Logger.info("Start application...")
   val system = ActorSystem("AlertMail")

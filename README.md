@@ -5,7 +5,7 @@
 ```sh
 $ git clone https://github.com/yukihirai0505/sns-alert.git
 $ cd sns-alert
-$ heroku create
+$ heroku git:remote -a sns-alert
 $ git push heroku master
 $ heroku open
 ```
