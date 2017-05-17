@@ -15,3 +15,12 @@ $ heroku open
 ```
 $ heroku config:add APPLICATION_SECRET={it depends on you}
 ```
+
+## Local
+
+create user, db
+
+```
+createuser -P root
+createdb sns_alert -O root
+```
