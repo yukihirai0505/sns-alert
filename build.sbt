@@ -6,8 +6,13 @@ lazy val root = (project in file("."))
   .enablePlugins(PlayScala)
   .aggregate(sFacebook)
   .dependsOn(sFacebook)
+  .aggregate(sInstagram)
+  .dependsOn(sInstagram)
 // Facebook
 lazy val sFacebook = RootProject(uri("git://github.com/yukihirai0505/sFacebook.git"))
+
+// Instagram
+lazy val sInstagram = RootProject(uri("git://github.com/yukihirai0505/sInstagram#35cdfccb99384fd404e77ceddb72c793086362d8"))
 
 scalaVersion := "2.11.8"
 
@@ -19,7 +24,7 @@ libraryDependencies ++= Seq(
   "com.enragedginger" %% "akka-quartz-scheduler" % "1.6.0-akka-2.4.x",
 
   // Instagram
-  "com.yukihirai0505" % "sinstagram_2.11" % "0.0.5",
+  //"com.yukihirai0505" % "sinstagram_2.11" % "0.0.4",
   // Twitter
   "com.danielasfregola" %% "twitter4s" % "5.0",
 
@@ -34,4 +39,3 @@ libraryDependencies ++= Seq(
   // TEST
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test
 )
-
