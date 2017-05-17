@@ -7,9 +7,9 @@ lazy val root = (project in file("."))
   .aggregate(sFacebook)
   .dependsOn(sFacebook)
 // Facebook
-lazy val sFacebook = uri("git://github.com/yukihirai0505/sFacebook.git#9fb0b6f6e36616b748055438695f93ce5c1e2c47")
+lazy val sFacebook = RootProject(uri("git://github.com/yukihirai0505/sFacebook.git"))
 
-scalaVersion := "2.11.7"
+scalaVersion := "2.11.8"
 
 libraryDependencies ++= Seq(
   cache,
