@@ -5,6 +5,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.Environment
 import play.api.cache.CacheApi
 import play.api.db.slick.DatabaseConfigProvider
+import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, Request}
 import services.FacebookService
 
@@ -15,8 +16,8 @@ import scala.concurrent.Future
   * Created by yukihirai on 2017/03/18.
   */
 @Singleton
-class FacebookC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environment, cache: CacheApi)
-  extends FacebookService(dbConfigProvider, env, cache)
+class FacebookC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environment, cache: CacheApi, messagesApi: MessagesApi)
+  extends FacebookService(dbConfigProvider, env, cache, messagesApi)
 {
 
 
@@ -35,6 +36,13 @@ class FacebookC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environ
     removeToken.flatMap {
       case false => Future successful Redirect(routes.LoginC.login().url)
       case true => Future successful Redirect(routes.MyPageC.index().url)
+    }
+  }
+
+  def post = Action.async { implicit req: Request[_] =>
+    postMessage.flatMap {
+      case false => Future successful Redirect(routes.LoginC.login().url)
+      case true => Future successful Redirect(routes.SplashC.index().url)
     }
   }
 

@@ -1,0 +1,32 @@
+@import dtos.ViewDto.ViewDto
+@import views.html.common.error
+@(viewDto: ViewDto)(implicit req: RequestHeader)
+
+@user = @{viewDto.account.flatMap(_.user)}
+
+@layout(viewDto) {
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-9">
+          <div class="account-setting-box">
+            <div class="row">
+              <div class="col-sm-9">
+                <h2>Account Setting</h2>
+                @helper.form(routes.FacebookC.post()){
+                  @helper.CSRF.formField
+                  <div class="blank-arrow">
+                    <label>Facebook Message</label>
+                  </div>
+                  <input type="text" name="message" placeholder="message" value="">
+
+                  <button type="submit" class="btn btn-primary">Save</button><br>
+                }
+              </div>
+            </div>
+          </div><!--/account setting box-->
+        </div>
+      </div>
+    </div>
+  </section>
+}

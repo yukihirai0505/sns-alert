@@ -40,6 +40,7 @@
               <div class="shop-menu pull-right">
                 <ul class="nav navbar-nav">
                   @if(viewDto.account.exists(x => x.isLogin)){
+                    <li><a href="@routes.SplashC.index().url"><i class="fa fa-tint"></i> Splash</a></li>
                     <li><a href="@routes.MyPageC.index().url"><i class="fa fa-user"></i> Account</a></li>
                     <li><a href="@routes.LoginC.logout().url"><i class="fa fa-unlock"></i> Logout</a></li>
                   } else {

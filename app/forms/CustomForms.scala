@@ -37,3 +37,12 @@ object MyPageForms extends CustomValidate {
     )(MyPageForm.apply)(MyPageForm.unapply)
   )
 }
+
+object FacebookPostForms extends CustomValidate {
+  case class FacebookPostForms(message: String)(implicit messagesApi: MessagesApi)
+  def facebookPostForm(implicit messagesApi: MessagesApi) = Form(
+    mapping(
+      "message" -> text
+    )(FacebookPostForms.apply)(FacebookPostForms.unapply)
+  )
+}

@@ -25,9 +25,13 @@ GET     /instagram/remove           controllers.InstagramC.remove
 GET     /facebook/auth              controllers.FacebookC.auth
 GET     /facebook/callback          controllers.FacebookC.callback(code: String)
 GET     /facebook/remove            controllers.FacebookC.remove
+POST    /facebook/post              controllers.FacebookC.post
 
 ## Twitter
 GET     /twitter/:name/follower     controllers.TwitterC.getFollowerCount(name: String)
+
+## Splash
+GET     /splash                     controllers.SplashC.index
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
