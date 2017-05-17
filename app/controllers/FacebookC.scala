@@ -20,7 +20,7 @@ class FacebookC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environ
 {
 
 
-  def test = Action.async { implicit req: Request[_] =>
+  def auth = Action.async { implicit req: Request[_] =>
     Future successful Redirect(AUTH_URL(req, env))
   }
 
@@ -30,4 +30,12 @@ class FacebookC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environ
       case Some(account) => Future successful Redirect(routes.MyPageC.index().url).withSession(account.session)
     }
   }
+
+  def remove = Action.async { implicit req: Request[_] =>
+    removeToken.flatMap {
+      case false => Future successful Redirect(routes.LoginC.login().url)
+      case true => Future successful Redirect(routes.MyPageC.index().url)
+    }
+  }
+
 }

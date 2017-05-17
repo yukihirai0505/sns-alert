@@ -38,6 +38,10 @@ class UserDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
     db.run(User.filter(_.instagramId === instagramId).result.headOption)
   }
 
+  def getByFacebookId(facebookId: String): Future[Option[UserRow]] = {
+    db.run(User.filter(_.facebookId === facebookId).result.headOption)
+  }
+
   def getByEmail(email: String): Future[Option[UserRow]] = {
     db.run(User.filter(_.email === email).result.headOption)
   }

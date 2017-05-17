@@ -22,8 +22,9 @@ GET     /instagram/callback         controllers.InstagramC.callback(code: String
 GET     /instagram/remove           controllers.InstagramC.remove
 
 ## Facebook
-GET     /facebook/test              controllers.FacebookC.test
+GET     /facebook/auth              controllers.FacebookC.auth
 GET     /facebook/callback          controllers.FacebookC.callback(code: String)
+GET     /facebook/remove            controllers.FacebookC.remove
 
 ## Twitter
 GET     /twitter/:name/follower     controllers.TwitterC.getFollowerCount(name: String)
