@@ -1,6 +1,6 @@
 package models
 
-import models.Tables.UserRow
+import models.Tables.{SplashPostRow, UserRow}
 
 /**
   * author Yuki Hirai on 2017/03/21.
@@ -25,4 +25,10 @@ object Entities {
                                , email: Option[String] = None
                                , password: Option[String] = None
                              )
+
+  case class SplashEntity(
+                         splashPosts: Option[Seq[SplashPostRow]] = None
+                         ) extends BaseEntity
 }
+
+trait BaseEntity

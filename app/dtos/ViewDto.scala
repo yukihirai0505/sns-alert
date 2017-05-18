@@ -4,6 +4,7 @@ import play.api.data.Form
 
 import forms.LoginForms.LoginForm
 import forms.VerifyMailForms.VerifyMailForm
+import models.BaseEntity
 import models.Entities.AccountEntity
 
 /**
@@ -15,6 +16,7 @@ object ViewDto {
                       account: Option[AccountEntity] = None
                       , headTagInfo: HeadTagInfo
                       , loginForm: Option[Form[LoginForm]] = None
+                      , pageEntity: Option[BaseEntity] = None
                       , verifyMailForm: Option[Form[VerifyMailForm]] = None
                       , instagramAuthUrl: Option[String] = None
                     )

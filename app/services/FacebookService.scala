@@ -80,8 +80,11 @@ class FacebookService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: E
       val message = frm.get.message
       new Facebook(AccessToken(user.facebookAccessToken.get)).publishPost(user.facebookId.get, Some(message)).flatMap { response =>
         val splashPostDAO = new SplashPostDAO(dbConfigProvider)
+        val postId = response.get.id
+        val postIds = postId.split("_")
+        val link = s"https://www.facebook.com/${postIds(0)}/posts/${postIds(1)}"
         val newSplashPost = SplashPostRow(
-          userId = user.id.get, postId = response.get.id, message = message, snsType = SnsType.Facebook.value, postDatetime = new DateTime()
+          userId = user.id.get, postId = postId, message = message, link = link, snsType = SnsType.Facebook.value, postDatetime = new DateTime()
         )
         splashPostDAO.add(newSplashPost)
         Future successful true

@@ -3,15 +3,17 @@ package services
 import javax.inject.Inject
 
 import controllers.BaseTrait
-import daos.UserDAO
+import daos.{SplashPostDAO, UserDAO}
 import dtos.ViewDto.{HeadTagInfo, ViewDto}
-import models.Entities.AccountEntity
+import models.Entities.{AccountEntity, SplashEntity}
 import play.api.Environment
 import play.api.cache.CacheApi
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.mvc.{Controller, Request, RequestHeader}
+
 import utils.SessionUtil
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
@@ -26,12 +28,14 @@ class SplashService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Env
     createViewDto(req, account(req), HeadTagInfo(title = headTitle))
 
   def getIndexViewDto(implicit req: Request[_]): Future[Either[ViewDto, ViewDto]] = {
+    val _account = account(req)
     val v = viewDto(req, "Splash")
-    Future successful {
-      if (account(req).isLogin) {
-        Right(v)
-      } else Left(v)
-    }
+    if (_account.isLogin)
+      new SplashPostDAO(dbConfigProvider).getByUserId(_account.user.get.id.get).flatMap { posts =>
+        val pageEntity = SplashEntity(splashPosts = Some(posts))
+        Future successful Right(v.copy(pageEntity = Some(pageEntity)))
+      }
+    else Future successful Left(v)
   }
 
 }

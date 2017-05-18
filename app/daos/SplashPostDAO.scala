@@ -35,6 +35,9 @@ class SplashPostDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
     db.run(SplashPost.filter(_.id === id).result.headOption)
   }
 
+  def getByUserId(userId: Long): Future[Seq[SplashPostRow]] = {
+    db.run(SplashPost.filter(_.userId === userId).result)
+  }
 
   def delete(id: Int): Future[Int] = {
     db.run(SplashPost.filter(_.id === id).delete)

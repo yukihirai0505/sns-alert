@@ -22,6 +22,7 @@ CREATE TABLE "splash_post"
   user_id       BIGINT       NOT NULL,
   post_id       VARCHAR(100) NOT NULL,
   message       VARCHAR(500) NOT NULL,
+  link          VARCHAR(500) NOT NULL,
   sns_type      INTEGER      NOT NULL,
   post_datetime TIMESTAMP    NOT NULL
 );

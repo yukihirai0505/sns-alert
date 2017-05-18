@@ -1,8 +1,11 @@
 @import dtos.ViewDto.ViewDto
-@import views.html.common.error
+@import models.Entities.SplashEntity
+@import models.Tables.SplashPostRow
 @(viewDto: ViewDto)(implicit req: RequestHeader)
 
-@user = @{viewDto.account.flatMap(_.user)}
+@splashPosts = @{
+  viewDto.pageEntity.flatMap(x => x.asInstanceOf[SplashEntity].splashPosts).getOrElse(Seq.empty[SplashPostRow])
+}
 
 @layout(viewDto) {
   <section>
@@ -13,16 +16,35 @@
             <div class="row">
               <div class="col-sm-9">
                 <h2>Account Setting</h2>
-                @helper.form(routes.FacebookC.post()){
+                @helper.form(routes.FacebookC.post()) {
                   @helper.CSRF.formField
                   <div class="blank-arrow">
                     <label>Facebook Message</label>
                   </div>
                   <textarea name="message" cols="30" rows="10"></textarea>
-                  <button type="submit" class="btn btn-primary">Save</button><br>
+                  <button type="submit" class="btn btn-primary">Save</button>
+                  <br>
                 }
+                <h2 style="margin-top: 40px;">Your splash posts</h2>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>message</th>
+                      <th>link</th>
+                      <th>post time</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for(post <- splashPosts) {
+                      <tr>
+                        <td>@post.message</td>
+                        <td><a href="@post.link" target="_blank">Post Link</a></td>
+                        <td>@post.postDatetime</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
               </div>
-              @*TODO: 削除予定投稿一覧 *@
             </div>
           </div><!--/account setting box-->
         </div>
