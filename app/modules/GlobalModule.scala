@@ -1,11 +1,12 @@
 package modules
 
-import play.api.{Application, Environment, Logger, Mode}
-import play.api.inject.ApplicationLifecycle
 import actors.{AlertMail, SplashPost}
 import akka.actor.{ActorRef, ActorSystem, Props}
 import com.google.inject.{AbstractModule, Inject}
 import com.typesafe.akka.extension.quartz.QuartzSchedulerExtension
+import play.api.db.slick.DatabaseConfigProvider
+import play.api.inject.ApplicationLifecycle
+import play.api.{Environment, Logger, Mode}
 
 import scala.concurrent.Future
 
@@ -18,7 +19,7 @@ class GlobalModule extends AbstractModule {
   }
 }
 
-class GlobalSetting @Inject()(lifecycle: ApplicationLifecycle, env: Environment) {
+class GlobalSetting @Inject()(lifecycle: ApplicationLifecycle, env: Environment, dbConfigProvider: DatabaseConfigProvider) {
   Logger.info("Start application...")
 
   if (!env.mode.equals(Mode.Dev)) startActor
@@ -29,11 +30,11 @@ class GlobalSetting @Inject()(lifecycle: ApplicationLifecycle, env: Environment)
 
   def startActor = {
     val system: ActorSystem = ActorSystem("BatchSystem")
-    val alertMailActor: ActorRef = system.actorOf(Props(classOf[AlertMail]))
-    val splashPostActor: ActorRef = system.actorOf(Props(classOf[SplashPost]))
+    val alertMailActor: ActorRef = system.actorOf(Props(classOf[AlertMail], dbConfigProvider))
+    val splashPostActor: ActorRef = system.actorOf(Props(classOf[SplashPost], dbConfigProvider))
 
-     // TODO: send sns search result mail function
-    //QuartzSchedulerExtension(system).schedule("AlertMailEveryHour", alertMailActor, "send sns alert mail")
+    // TODO: send sns search result mail function
+    // QuartzSchedulerExtension(system).schedule("AlertMailEveryHour", alertMailActor, "send sns alert mail")
 
     QuartzSchedulerExtension(system).schedule("SplashPostEveryHour", splashPostActor, "splash posts")
   }

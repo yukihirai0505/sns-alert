@@ -2,13 +2,11 @@ package actors
 
 import javax.inject.Singleton
 
-import play.api.Logger.logger
-import play.api.Play
-import play.api.db.slick.DatabaseConfigProvider
-
 import akka.actor.Actor
-import models.Tables.User
-import slick.driver.JdbcProfile
+import com.google.inject.Inject
+import daos.UserDAO
+import play.api.Logger.logger
+import play.api.db.slick.DatabaseConfigProvider
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -17,19 +15,11 @@ import scala.concurrent.Future
   * author Yuki Hirai on 2017/03/22.
   */
 @Singleton
-class AlertMail extends Actor {
+class AlertMail @Inject()(dbConfigProvider: DatabaseConfigProvider) extends UserDAO(dbConfigProvider) with Actor {
 
   override def receive = {
     case msg: String =>
       logger.info(msg)
-      // FIXME is it possible inject DatabaseConfigProvider??
-      def listAll = {
-        val dbConfig = DatabaseConfigProvider.get[JdbcProfile](Play.current)
-        import dbConfig._
-        import driver.api._
-        db.run(User.result)
-      }
-
       listAll.flatMap { users =>
         Future successful users.foreach(u => logger.info(u.email))
       }

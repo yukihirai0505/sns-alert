@@ -2,9 +2,9 @@ package daos
 
 import javax.inject.{Inject, Singleton}
 
-import play.api.db.slick.DatabaseConfigProvider
-
+import com.github.tototoshi.slick.MySQLJodaSupport._
 import models.Tables.{SplashPost, SplashPostRow}
+import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -45,5 +45,9 @@ class SplashPostDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
   def listAll: Future[Seq[SplashPostRow]] = {
     db.run(SplashPost.result)
+  }
+
+  def getSplashPosts: Future[Seq[SplashPostRow]] = {
+    db.run(SplashPost.filter(_.postDatetime <= new org.joda.time.DateTime().minusDays(1)).result)
   }
 }
