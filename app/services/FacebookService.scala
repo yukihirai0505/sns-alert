@@ -78,6 +78,7 @@ class FacebookService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: E
     } else {
       val user = account.user.get
       val message = frm.get.message
+      // TODO: Check the access_token still alive. If it is already dead, redirect facebook auth url.
       new Facebook(AccessToken(user.facebookAccessToken.get)).publishPost(user.facebookId.get, Some(message)).flatMap { response =>
         val splashPostDAO = new SplashPostDAO(dbConfigProvider)
         val postId = response.get.id
