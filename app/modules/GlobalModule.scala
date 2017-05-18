@@ -3,8 +3,8 @@ package modules
 import play.api.Logger
 import play.api.inject.ApplicationLifecycle
 
-import actors.AlertMail
-import akka.actor.{ActorSystem, Props}
+import actors.{AlertMail, SplashPost}
+import akka.actor.{ActorRef, ActorSystem, Props}
 import com.google.inject.{AbstractModule, Inject}
 import com.typesafe.akka.extension.quartz.QuartzSchedulerExtension
 
@@ -18,14 +18,26 @@ class GlobalModule extends AbstractModule {
     bind(classOf[GlobalSetting]).asEagerSingleton()
   }
 }
+
 class GlobalSetting @Inject()(lifecycle: ApplicationLifecycle){
-  // TODO: delete facebook post automatically
-  /***
   Logger.info("Start application...")
-  val system = ActorSystem("AlertMail")
-  val actor = system.actorOf(Props(classOf[AlertMail]))
-  QuartzSchedulerExtension(system).schedule("AlertMailEveryHour", actor, "メール送信")
+
+  // when you develop this app, comment out this method
+  startActor
+
   lifecycle.addStopHook { () =>
     Future.successful(null)
-  }***/
+  }
+
+  def startActor = {
+    val system: ActorSystem = ActorSystem("BatchSystem")
+    val alertMailActor: ActorRef = system.actorOf(Props(classOf[AlertMail]))
+    val splashPostActor: ActorRef = system.actorOf(Props(classOf[SplashPost]))
+
+     // TODO: send sns search result mail function
+    //QuartzSchedulerExtension(system).schedule("AlertMailEveryHour", alertMailActor, "send sns alert mail")
+
+    QuartzSchedulerExtension(system).schedule("SplashPostEveryHour", splashPostActor, "splash posts")
+  }
+
 }

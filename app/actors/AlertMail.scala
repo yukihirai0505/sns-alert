@@ -29,6 +29,7 @@ class AlertMail extends Actor {
         import driver.api._
         db.run(User.result)
       }
+
       listAll.flatMap { users =>
         Future successful users.foreach(u => logger.info(u.email))
       }
