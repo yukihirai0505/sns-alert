@@ -13,3 +13,14 @@ CREATE TABLE "user" (
   twitter_access_token VARCHAR(255),
   PRIMARY KEY (id)
 );
+
+CREATE TABLE "splash_post"
+(
+  id            SERIAL       NOT NULL
+    CONSTRAINT splash_post_pkey
+    PRIMARY KEY,
+  user_id       BIGINT       NOT NULL,
+  post_id       VARCHAR(100) NOT NULL,
+  sns_type      INTEGER      NOT NULL,
+  post_datetime TIMESTAMP    NOT NULL
+);
