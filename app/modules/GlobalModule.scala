@@ -1,8 +1,7 @@
 package modules
 
-import play.api.Logger
+import play.api.{Application, Environment, Logger, Mode}
 import play.api.inject.ApplicationLifecycle
-
 import actors.{AlertMail, SplashPost}
 import akka.actor.{ActorRef, ActorSystem, Props}
 import com.google.inject.{AbstractModule, Inject}
@@ -19,11 +18,10 @@ class GlobalModule extends AbstractModule {
   }
 }
 
-class GlobalSetting @Inject()(lifecycle: ApplicationLifecycle){
+class GlobalSetting @Inject()(lifecycle: ApplicationLifecycle, env: Environment) {
   Logger.info("Start application...")
 
-  // when you develop this app, comment out this method TODO: Add dev check
-  startActor
+  if (!env.mode.equals(Mode.Dev)) startActor
 
   lifecycle.addStopHook { () =>
     Future.successful(null)
