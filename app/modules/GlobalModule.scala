@@ -22,7 +22,7 @@ class GlobalModule extends AbstractModule {
 class GlobalSetting @Inject()(lifecycle: ApplicationLifecycle){
   Logger.info("Start application...")
 
-  // when you develop this app, comment out this method
+  // when you develop this app, comment out this method TODO: Add dev check
   startActor
 
   lifecycle.addStopHook { () =>
