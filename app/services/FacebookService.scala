@@ -5,16 +5,19 @@ import javax.inject.Inject
 import play.api.Environment
 import play.api.cache.CacheApi
 import play.api.db.slick.DatabaseConfigProvider
-import play.api.mvc.{Controller, Request, RequestHeader}
+import play.api.i18n.MessagesApi
+import play.api.mvc.{Controller, Request}
+
 import com.yukihirai0505.sFacebook.Facebook
 import com.yukihirai0505.sFacebook.auth.AccessToken
 import configurations.FacebookConfig
+import constants.Constants.SnsType
 import controllers.BaseTrait
-import daos.UserDAO
-import dtos.ViewDto.{HeadTagInfo, ViewDto}
+import daos.{SplashPostDAO, UserDAO}
 import forms.FacebookPostForms
 import models.Entities.AccountEntity
-import play.api.i18n.MessagesApi
+import models.Tables.SplashPostRow
+import org.joda.time.DateTime
 import utils.SessionUtil
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -76,8 +79,11 @@ class FacebookService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: E
       val user = account.user.get
       val message = frm.get.message
       new Facebook(AccessToken(user.facebookAccessToken.get)).publishPost(user.facebookId.get, Some(message)).flatMap { response =>
-        // TODO: save post id and time to db
-        println(s"post id: ${response.get.id}")
+        val splashPostDAO = new SplashPostDAO(dbConfigProvider)
+        val newSplashPost = SplashPostRow(
+          userId = user.id.get, postId = response.get.id, message = message, snsType = SnsType.Facebook.value, postDatetime = new DateTime()
+        )
+        splashPostDAO.add(newSplashPost)
         Future successful true
       }
     }

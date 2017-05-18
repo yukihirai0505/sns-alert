@@ -5,7 +5,6 @@ import play.api.mvc.{Call, RequestHeader}
 import play.api.{Environment, Mode}
 
 import com.yukihirai0505.sFacebook.FacebookAuth
-import com.yukihirai0505.sFacebook.http.Response
 import com.yukihirai0505.sFacebook.model.Scope
 import com.yukihirai0505.sFacebook.auth.Auth
 import dispatch.Future
