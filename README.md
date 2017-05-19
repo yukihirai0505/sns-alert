@@ -34,13 +34,16 @@ $ heroku config:add TWITTER_CONSUMER_TOKEN_SECRET=
 create user, db
 
 ```
-createuser -P root
-createdb sns_alert -O root
+$ createuser -P root
+$ createdb sns_alert -O root
 ```
+
+please use ddl at `conf/evolutions.default/*.sql`
+
 
 ### Env Setting
 
 ```
-cp env.text.default env.text # set env
-eval (env.text)
+$ cp env.text.default env.text # set env
+$ eval (env.text)
 ```
