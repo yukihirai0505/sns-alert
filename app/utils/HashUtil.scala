@@ -13,7 +13,7 @@ object HashUtil {
   /**
     * make hash on the specified key.
     */
-  def create(key: String): String ={
+  def create(key: String): String = {
     val dt = new DateTime(new java.util.Date())
     MessageDigest.getInstance("MD5").digest((key + dt.getMillis.toString).getBytes).map("%02x".format(_)).mkString
   }
@@ -21,7 +21,7 @@ object HashUtil {
   /**
     * make md5 hash on the specified current datetime.
     */
-  def create: String ={
+  def create: String = {
     val dt = new DateTime(new java.util.Date())
     MessageDigest.getInstance("MD5").digest(dt.getMillis.toString.getBytes).map("%02x".format(_)).mkString
   }
@@ -43,7 +43,7 @@ object HashUtil {
   /**
     * make md5 hash, account password.
     */
-  def passwordGenerator(key: String): String ={
+  def passwordGenerator(key: String): String = {
     MessageDigest.getInstance("MD5").digest(key.getBytes).map("%02x".format(_)).mkString
   }
 }

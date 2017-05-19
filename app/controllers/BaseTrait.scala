@@ -12,7 +12,7 @@ trait BaseTrait {
 
   def createViewDto(req: RequestHeader, account: AccountEntity, headTagInfo: HeadTagInfo): ViewDto = {
     ViewDto(
-        account = Some(account)
+      account = Some(account)
       , headTagInfo = headTagInfo
     )
   }

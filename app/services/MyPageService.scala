@@ -2,23 +2,22 @@ package services
 
 import javax.inject.Inject
 
-import configurations.InstagramConfig
+import play.api.Environment
 import play.api.cache.CacheApi
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Controller, Request, RequestHeader}
 
+import configurations.InstagramConfig
 import controllers.BaseTrait
 import daos.UserDAO
 import dtos.ViewDto.{HeadTagInfo, ViewDto}
-import models.Entities.AccountEntity
-import play.api.Environment
-
 import forms.MyPageForms
+import models.Entities.AccountEntity
 import utils.SessionUtil
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 /**
   * Created by yukihirai on 2017/03/20.

@@ -2,19 +2,20 @@ package services
 
 import javax.inject.Inject
 
+import play.api.Environment
+import play.api.cache.CacheApi
+import play.api.db.slick.DatabaseConfigProvider
+import play.api.mvc.{Controller, Request}
+
 import com.yukihirai0505.sInstagram.Instagram
 import com.yukihirai0505.sInstagram.responses.auth.AccessToken
 import configurations.InstagramConfig
 import daos.UserDAO
 import models.Entities.AccountEntity
-import play.api.Environment
-import play.api.cache.CacheApi
-import play.api.db.slick.DatabaseConfigProvider
-import play.api.mvc.{Controller, Request}
 import utils.SessionUtil
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 /**
   * Created by yukihirai on 2017/03/20.
@@ -52,7 +53,7 @@ class InstagramService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: 
 
   def removeToken(implicit req: Request[_]): Future[Boolean] = {
     val account = SessionUtil.getAccount
-    if(account.isLogin) {
+    if (account.isLogin) {
       val newUser = account.user.get.copy(instagramId = None, instagramAccessToken = None)
       update(newUser).flatMap { _ =>
         SessionUtil.setAccount(account.session, account.copy(user = Some(newUser)))

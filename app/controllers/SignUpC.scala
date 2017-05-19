@@ -21,8 +21,7 @@ import scala.concurrent.Future
 @Singleton
 class SignUpC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environment, cache: CacheApi, override implicit val messagesApi: MessagesApi, mailerClient: MailerClient)
   extends SignUpService(dbConfigProvider, env, cache, messagesApi, mailerClient: MailerClient)
-    with InstagramConfig
-{
+    with InstagramConfig {
 
   def index: Action[AnyContent] = Action.async { implicit req: Request[_] =>
     sentMail.flatMap {

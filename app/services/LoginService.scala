@@ -2,12 +2,14 @@ package services
 
 import javax.inject.Inject
 
-import configurations.InstagramConfig
+import play.api.Environment
 import play.api.cache.CacheApi
 import play.api.data.{Form, FormError}
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Controller, Request}
+
+import configurations.InstagramConfig
 import controllers.BaseTrait
 import daos.UserDAO
 import dtos.ViewDto.{HeadTagInfo, ViewDto}
@@ -15,11 +17,10 @@ import forms.LoginForms.{LoginForm, loginForm}
 import forms.VerifyMailForms.{VerifyMailForm, verifyMailForm}
 import models.Entities.AccountEntity
 import models.Tables.UserRow
-import play.api.Environment
 import utils.{HashUtil, SessionUtil}
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 /**
   * Created by yukihirai on 2017/03/20.
@@ -38,9 +39,9 @@ class LoginService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Envi
       account = Some(account), loginForm = Some(loginFrm), verifyMailForm = Some(verifyFrm), instagramAuthUrl = Some(AUTH_URL(req, env))
     )
     Future successful {
-      if(account.isLogin) {
+      if (account.isLogin) {
         Left(viewDto)
-      }else Right(viewDto)
+      } else Right(viewDto)
     }
   }
 
@@ -53,7 +54,7 @@ class LoginService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Envi
       val viewDto: ViewDto = createViewDto(req, account, headTagInfo).copy(
         loginForm = Some(frm), verifyMailForm = Some(verifyMailForm.bindFromRequest()), instagramAuthUrl = Some(AUTH_URL(req, env))
       )
-      if(frm.hasErrors) {
+      if (frm.hasErrors) {
         Future successful Left(viewDto)
       } else {
         doLogin(account, user) map {

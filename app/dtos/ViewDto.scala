@@ -26,4 +26,5 @@ object ViewDto {
                           , description: String = "TODO"
                           , keywords: String = "SNS,ALERT,アラート,SNSアラート,SNS-ALERT"
                         )
+
 }

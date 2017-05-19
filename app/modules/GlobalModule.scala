@@ -1,12 +1,13 @@
 package modules
 
+import play.api.db.slick.DatabaseConfigProvider
+import play.api.inject.ApplicationLifecycle
+import play.api.{Environment, Logger, Mode}
+
 import actors.{AlertMail, SplashPost}
 import akka.actor.{ActorRef, ActorSystem, Props}
 import com.google.inject.{AbstractModule, Inject}
 import com.typesafe.akka.extension.quartz.QuartzSchedulerExtension
-import play.api.db.slick.DatabaseConfigProvider
-import play.api.inject.ApplicationLifecycle
-import play.api.{Environment, Logger, Mode}
 
 import scala.concurrent.Future
 

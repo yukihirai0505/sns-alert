@@ -2,9 +2,10 @@ package daos
 
 import javax.inject.{Inject, Singleton}
 
+import play.api.db.slick.DatabaseConfigProvider
+
 import com.github.tototoshi.slick.MySQLJodaSupport._
 import models.Tables.{SplashPost, SplashPostRow}
-import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -17,6 +18,7 @@ import scala.concurrent.Future
 class SplashPostDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
   val dbConfig = dbConfigProvider.get[JdbcProfile]
+
   import dbConfig._
   import driver.api._
 
@@ -27,7 +29,7 @@ class SplashPostDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
   def update(splashPost: SplashPostRow): Future[String] = {
     db.run(SplashPost.filter(_.id === splashPost.id.get).update(splashPost)).map(_ => "SplashPost successfully updated").recover {
-      case ex : Exception => ex.getCause.getMessage
+      case ex: Exception => ex.getCause.getMessage
     }
   }
 

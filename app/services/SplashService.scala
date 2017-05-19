@@ -2,15 +2,15 @@ package services
 
 import javax.inject.Inject
 
-import controllers.BaseTrait
-import daos.{SplashPostDAO, UserDAO}
-import dtos.ViewDto.{HeadTagInfo, ViewDto}
-import models.Entities.{AccountEntity, SplashEntity}
 import play.api.Environment
 import play.api.cache.CacheApi
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.mvc.{Controller, Request, RequestHeader}
 
+import controllers.BaseTrait
+import daos.{SplashPostDAO, UserDAO}
+import dtos.ViewDto.{HeadTagInfo, ViewDto}
+import models.Entities.{AccountEntity, SplashEntity}
 import utils.SessionUtil
 
 import scala.concurrent.ExecutionContext.Implicits.global

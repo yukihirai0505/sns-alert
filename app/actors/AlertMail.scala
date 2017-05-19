@@ -2,11 +2,12 @@ package actors
 
 import javax.inject.Singleton
 
+import play.api.Logger.logger
+import play.api.db.slick.DatabaseConfigProvider
+
 import akka.actor.Actor
 import com.google.inject.Inject
 import daos.UserDAO
-import play.api.Logger.logger
-import play.api.db.slick.DatabaseConfigProvider
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

@@ -11,8 +11,8 @@ import play.api.mvc._
 import configurations.InstagramConfig
 import services.MyPageService
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 /**
   * Created by yukihirai on 2017/03/18.
@@ -20,8 +20,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 @Singleton
 class MyPageC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environment, cache: CacheApi, override implicit val messagesApi: MessagesApi)
   extends MyPageService(dbConfigProvider, env, cache, messagesApi)
-    with InstagramConfig
-{
+    with InstagramConfig {
 
   def index = Action.async { implicit req: Request[_] =>
     getMyPageViewDto.flatMap {
@@ -34,7 +33,7 @@ class MyPageC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environme
     updateAccount.flatMap {
       case Left(v) => if (v.account.exists(_.isLogin)) {
         Future successful Ok(views.html.MyPageC.index(v))
-      }else Future successful Redirect(routes.LoginC.login().url)
+      } else Future successful Redirect(routes.LoginC.login().url)
       case Right(_) => Future successful Redirect(routes.MyPageC.index().url)
     }
   }

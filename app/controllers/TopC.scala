@@ -18,8 +18,7 @@ import scala.concurrent.Future
   */
 @Singleton
 class TopC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environment, cache: CacheApi, override implicit val messagesApi: MessagesApi)
-  extends TopService(dbConfigProvider, env, cache, messagesApi)
-{
+  extends TopService(dbConfigProvider, env, cache, messagesApi) {
 
   def index: Action[AnyContent] = Action.async { implicit req: Request[_] =>
     getIndexViewDto.flatMap {

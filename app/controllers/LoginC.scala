@@ -11,8 +11,8 @@ import play.api.mvc._
 import configurations.InstagramConfig
 import services.LoginService
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 /**
   * Created by yukihirai on 2017/03/18.
@@ -20,8 +20,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 @Singleton
 class LoginC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environment, cache: CacheApi, override implicit val messagesApi: MessagesApi)
   extends LoginService(dbConfigProvider, env, cache, messagesApi)
-    with InstagramConfig
-{
+    with InstagramConfig {
 
   def login: Action[AnyContent] = Action.async { implicit req: Request[_] =>
     getLoginViewDto.flatMap {

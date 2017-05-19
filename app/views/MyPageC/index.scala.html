@@ -1,8 +1,9 @@
 @import dtos.ViewDto.ViewDto
-@import views.html.common.error
 @(viewDto: ViewDto)(implicit req: RequestHeader)
 
-@user = @{viewDto.account.flatMap(_.user)}
+@user = @{
+  viewDto.account.flatMap(_.user)
+}
 
 @layout(viewDto) {
   <section>
@@ -13,7 +14,7 @@
             <div class="row">
               <div class="col-sm-9">
                 <h2>Account Setting</h2>
-                @helper.form(routes.MyPageC.update()){
+                @helper.form(routes.MyPageC.update()) {
                   @helper.CSRF.formField
                   <div class="blank-arrow">
                     <label>Your Email Address</label>
@@ -23,19 +24,28 @@
                     <label>Keywords with comma (ex: hoge, fuga)</label>
                   </div>
                   <input type="text" name="keywords" placeholder="ex: hoge, fuga" value="@user.flatMap(_.keywords).getOrElse("")">
-                  @if(viewDto.account.exists(_.user.exists(_.instagramAccessToken.nonEmpty))){
-                    <a class="btn btn-info" href="@routes.InstagramC.remove().url"><i class="fa fa-instagram"></i> Remove Instagram</a><br>
-                  }else{
-                    <a class="btn btn-default" href="@viewDto.instagramAuthUrl.getOrElse("")"><i class="fa fa-instagram"></i> Connect with Instagram</a><br>
+                  @if(viewDto.account.exists(_.user.exists(_.instagramAccessToken.nonEmpty))) {
+                    <a class="btn btn-info" href="@routes.InstagramC.remove().url"><i class="fa fa-instagram"></i>
+                      Remove Instagram</a>
+                    <br>
+                  } else {
+                    <a class="btn btn-default" href="@viewDto.instagramAuthUrl.getOrElse("")"><i class="fa fa-instagram"></i>
+                      Connect with Instagram</a>
+                    <br>
                   }
-                  @if(viewDto.account.exists(_.user.exists(_.facebookAccessToken.nonEmpty))){
-                    <a class="btn btn-info" href="@routes.FacebookC.remove().url" style="margin-top: 10px;"><i class="fa fa-facebook"></i> Remove Facebook</a><br>
-                  }else{
-                    <a class="btn btn-default" href="@routes.FacebookC.auth().url" style="margin-top: 10px;"><i class="fa fa-facebook"></i> Connect with Facebook</a><br>
+                  @if(viewDto.account.exists(_.user.exists(_.facebookAccessToken.nonEmpty))) {
+                    <a class="btn btn-info" href="@routes.FacebookC.remove().url" style="margin-top: 10px;"><i class="fa fa-facebook"></i>
+                      Remove Facebook</a>
+                    <br>
+                  } else {
+                    <a class="btn btn-default" href="@routes.FacebookC.auth().url" style="margin-top: 10px;"><i class="fa fa-facebook"></i>
+                      Connect with Facebook</a>
+                    <br>
                   }
-                  <button type="submit" class="btn btn-primary">Save</button><br>
+                  <button type="submit" class="btn btn-primary">Save</button>
+                  <br>
                 }
-                @helper.form(routes.MyPageC.delete()){
+                @helper.form(routes.MyPageC.delete()) {
                   @helper.CSRF.formField
                   <button type="submit" class="btn btn-danger" href="" style="margin-top: 10px;">Delete</button>
 

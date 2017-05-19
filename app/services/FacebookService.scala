@@ -59,7 +59,7 @@ class FacebookService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: E
 
   def removeToken(implicit req: Request[_]): Future[Boolean] = {
     val account: AccountEntity = SessionUtil.getAccount
-    if(account.isLogin) {
+    if (account.isLogin) {
       val newUser = account.user.get.copy(facebookId = None, facebookAccessToken = None)
       update(newUser).flatMap { _ =>
         SessionUtil.setAccount(account.session, account.copy(user = Some(newUser)))

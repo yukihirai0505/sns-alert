@@ -16,15 +16,16 @@
     <link href="@routes.Assets.versioned("stylesheets/animate.css")" rel="stylesheet">
     <link href="@routes.Assets.versioned("stylesheets/main.css")" rel="stylesheet">
     <link href="@routes.Assets.versioned("stylesheets/responsive.css")" rel="stylesheet">
-    <!--[if lt IE 9]>
-    <script src="@routes.Assets.versioned("javascripts/html5shiv.js")"></script>
-    <script src="@routes.Assets.versioned("javascripts/respond.min.js")"></script>
-    <![endif]-->
+      <!--[if lt IE 9]>
+      <script src="@routes.Assets.versioned("javascripts/html5shiv.js")"></script>
+      <script src="@routes.Assets.versioned("javascripts/respond.min.js")"></script>
+      <![endif]-->
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
-  </head><!--/head-->
+  </head>
+    <!--/head-->
 
   <body>
     <header id="header"><!--header-->
@@ -39,19 +40,20 @@
             <div class="col-sm-8">
               <div class="shop-menu pull-right">
                 <ul class="nav navbar-nav">
-                  @if(viewDto.account.exists(x => x.isLogin)){
-                    <li><a href="@routes.SplashC.index().url"><i class="fa fa-tint"></i> Splash</a></li>
-                    <li><a href="@routes.MyPageC.index().url"><i class="fa fa-user"></i> Account</a></li>
-                    <li><a href="@routes.LoginC.logout().url"><i class="fa fa-unlock"></i> Logout</a></li>
-                  } else {
-                    <li><a href="@routes.LoginC.login().url"><i class="fa fa-lock"></i> Login</a></li>
-                  }
+                @if(viewDto.account.exists(x => x.isLogin)) {
+                  <li><a href="@routes.SplashC.index().url"><i class="fa fa-tint"></i> Splash</a></li>
+                  <li><a href="@routes.MyPageC.index().url"><i class="fa fa-user"></i> Account</a></li>
+                  <li><a href="@routes.LoginC.logout().url"><i class="fa fa-unlock"></i> Logout</a></li>
+                } else {
+                  <li><a href="@routes.LoginC.login().url"><i class="fa fa-lock"></i> Login</a></li>
+                }
                 </ul>
               </div>
             </div>
           </div>
         </div>
-      </div><!--/header-middle-->
+      </div>
+        <!--/header-middle-->
 
       <div class="header-bottom"><!--header-bottom-->
         <div class="container">
@@ -73,15 +75,17 @@
             </div>
             @* TODO: Search Tag
             <div class="col-sm-3">
-              <div class="search_box pull-right">
-                <input type="text" placeholder="Search"/>
-              </div>
+            <div class="search_box pull-right">
+            <input type="text" placeholder="Search"/>
+            </div>
             </div>
             *@
           </div>
         </div>
-      </div><!--/header-bottom-->
-    </header><!--/header-->
+      </div>
+        <!--/header-bottom-->
+    </header>
+      <!--/header-->
 
     @content
 
@@ -95,7 +99,8 @@
         </div>
       </div>
 
-    </footer><!--/Footer-->
+    </footer>
+      <!--/Footer-->
     <script src="@routes.Assets.versioned("javascripts/jquery.js")"></script>
     <script src="@routes.Assets.versioned("javascripts/bootstrap.min.js")"></script>
     <script src="@routes.Assets.versioned("javascripts/jquery.scrollUp.min.js")"></script>

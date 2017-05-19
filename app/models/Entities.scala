@@ -27,8 +27,9 @@ object Entities {
                              )
 
   case class SplashEntity(
-                         splashPosts: Option[Seq[SplashPostRow]] = None
+                           splashPosts: Option[Seq[SplashPostRow]] = None
                          ) extends BaseEntity
+
 }
 
 trait BaseEntity

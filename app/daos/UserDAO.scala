@@ -2,12 +2,13 @@ package daos
 
 import javax.inject.{Inject, Singleton}
 
-import models.Tables.{User, UserRow}
 import play.api.db.slick.DatabaseConfigProvider
+
+import models.Tables.{User, UserRow}
 import slick.driver.JdbcProfile
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 /**
   * Created by yukihirai on 2017/03/18.
@@ -16,6 +17,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class UserDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
   val dbConfig = dbConfigProvider.get[JdbcProfile]
+
   import dbConfig._
   import driver.api._
 
@@ -26,7 +28,7 @@ class UserDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
   def update(user: UserRow): Future[String] = {
     db.run(User.filter(_.id === user.id.get).update(user)).map(_ => "User successfully updated").recover {
-      case ex : Exception => ex.getCause.getMessage
+      case ex: Exception => ex.getCause.getMessage
     }
   }
 

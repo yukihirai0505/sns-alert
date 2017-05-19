@@ -7,6 +7,7 @@ import play.api.cache.CacheApi
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, Request}
+
 import services.FacebookService
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -17,8 +18,7 @@ import scala.concurrent.Future
   */
 @Singleton
 class FacebookC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environment, cache: CacheApi, messagesApi: MessagesApi)
-  extends FacebookService(dbConfigProvider, env, cache, messagesApi)
-{
+  extends FacebookService(dbConfigProvider, env, cache, messagesApi) {
 
 
   def auth = Action.async { implicit req: Request[_] =>

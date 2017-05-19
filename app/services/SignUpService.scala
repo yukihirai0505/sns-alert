@@ -2,13 +2,13 @@ package services
 
 import javax.inject.Inject
 
-import play.api.{Environment, Mode}
 import play.api.cache.CacheApi
 import play.api.data.{Form, FormError}
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.mailer.{Email, MailerClient}
 import play.api.mvc.{Controller, Request, RequestHeader}
+import play.api.{Environment, Mode}
 
 import controllers.{BaseTrait, routes}
 import daos.UserDAO
@@ -19,9 +19,9 @@ import models.Entities.{AccountEntity, VerifyMailEntity}
 import models.Tables.UserRow
 import utils.{HashUtil, SessionUtil}
 
-import scala.concurrent.duration._
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.concurrent.duration._
 
 /**
   * Created by yukihirai on 2017/03/20.
@@ -80,9 +80,9 @@ class SignUpService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Env
               Future successful frm
             }
           }
-        case (None, _)=>
+        case (None, _) =>
           Future successful frm.copy(errors = errors :+ FormError("globalError", messagesApi("error.email.required")))
-        case (_, None)=>
+        case (_, None) =>
           Future successful frm.copy(errors = errors :+ FormError("globalError", messagesApi("error.password.required")))
       }
     } else {
@@ -90,7 +90,7 @@ class SignUpService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Env
     }
   }
 
-  def sendSignUpMail(account: AccountEntity,email: String, pass: String)(implicit req: RequestHeader) = {
+  def sendSignUpMail(account: AccountEntity, email: String, pass: String)(implicit req: RequestHeader) = {
     val hash: String = HashUtil.create
     val url = routes.SignUpC.signUp(hash).absoluteURL(secure = env.mode.equals(Mode.Prod))
     cache.set(

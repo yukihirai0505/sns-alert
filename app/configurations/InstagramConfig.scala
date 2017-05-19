@@ -1,13 +1,14 @@
 package configurations
 
 
+import play.api.mvc.{Call, RequestHeader}
+import play.api.{Environment, Mode}
+
 import com.yukihirai0505.sInstagram.InstagramAuth
 import com.yukihirai0505.sInstagram.model.{ResponseType, Scope}
 import com.yukihirai0505.sInstagram.responses.auth.Auth
 import controllers.routes
 import dispatch.Future
-import play.api.{Environment, Mode}
-import play.api.mvc.{Call, RequestHeader}
 
 /**
   * Created by yukihirai on 2017/03/20.

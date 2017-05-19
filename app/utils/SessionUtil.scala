@@ -29,8 +29,8 @@ object SessionUtil {
 
     // create histories
     val historyLimit: Int = 10
-    val tmpHistory: Seq[HistoryEntity] = account.history.fold(Seq.empty[HistoryEntity]){e =>e.zipWithIndex.withFilter(x => x._2 > (e.size - historyLimit)).map(x => x._1)}
-    val history: Seq[HistoryEntity] = tmpHistory :+ HistoryEntity(method = r.method, path= r.path)
+    val tmpHistory: Seq[HistoryEntity] = account.history.fold(Seq.empty[HistoryEntity]) { e => e.zipWithIndex.withFilter(x => x._2 > (e.size - historyLimit)).map(x => x._1) }
+    val history: Seq[HistoryEntity] = tmpHistory :+ HistoryEntity(method = r.method, path = r.path)
     val entity = account.copy(history = Some(history))
     setAccount(entity.session, entity)
     entity
@@ -45,7 +45,7 @@ object SessionUtil {
   }
 
   def setAccount(session: (String, String), account: AccountEntity)(implicit cache: CacheApi): Unit = {
-      setCache(cache, session, account)
+    setCache(cache, session, account)
   }
 
   def refreshSession(account: AccountEntity)(implicit cache: CacheApi): AccountEntity = {
@@ -60,7 +60,7 @@ object SessionUtil {
     Future successful account
   }
 
-  /*** private area ***/
+  /** * private area ***/
 
   private def setCache(cache: CacheApi, session: (String, String), account: AccountEntity): Unit = {
     val cacheKey: String = getSessionCacheKey(session)
@@ -82,7 +82,7 @@ object SessionUtil {
   /**
     * Check sessionId is set
     */
-  private def hasSessionId(request: RequestHeader): Boolean =  {
+  private def hasSessionId(request: RequestHeader): Boolean = {
     request.session.data.get(getSessionInsideKey) match {
       case Some(x) =>
         logger.debug(s"::: session id is [$x]")
@@ -96,9 +96,10 @@ object SessionUtil {
     * if there is no sessionId, create new sessionId
     */
   private def getSession(request: RequestHeader): (String, String) =
-    request.session.data.get(getSessionInsideKey).fold(makeSessionId){x => joinSessionIs(x)}
+    request.session.data.get(getSessionInsideKey).fold(makeSessionId) { x => joinSessionIs(x) }
 
   private def getKey(s: (String, String)): String = s._1
+
   private def getValue(s: (String, String)): String = s._2
 
   /**

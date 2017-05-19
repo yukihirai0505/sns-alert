@@ -16,7 +16,8 @@ package filters
   * https://www.playframework.com/documentation/2.5.x/ScalaCsrf
   *
   * ========================================================================
-  */
+  **/
+
 import javax.inject.Inject
 
 import play.api.http.DefaultHttpFilters

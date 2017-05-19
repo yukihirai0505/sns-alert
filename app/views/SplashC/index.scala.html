@@ -35,13 +35,13 @@
                     </tr>
                   </thead>
                   <tbody>
-                    @for(post <- splashPosts) {
-                      <tr>
-                        <td>@post.message</td>
-                        <td><a href="@post.link" target="_blank">Post Link</a></td>
-                        <td>@post.postDatetime</td>
-                      </tr>
-                    }
+                  @for(post <- splashPosts) {
+                    <tr>
+                      <td>@post.message</td>
+                      <td><a href="@post.link" target="_blank">Post Link</a></td>
+                      <td>@post.postDatetime</td>
+                    </tr>
+                  }
                   </tbody>
                 </table>
               </div>

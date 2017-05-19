@@ -17,8 +17,7 @@ import scala.concurrent.Future
   */
 @Singleton
 class SplashC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environment, cache: CacheApi)
-  extends SplashService(dbConfigProvider, env, cache)
-{
+  extends SplashService(dbConfigProvider, env, cache) {
 
   def index = Action.async { implicit req: Request[_] =>
     getIndexViewDto.flatMap {

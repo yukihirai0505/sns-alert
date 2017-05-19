@@ -1,8 +1,12 @@
 @import dtos.ViewDto.ViewDto
 @import views.html.common.error
 @(viewDto: ViewDto)(implicit req: RequestHeader, messages: MessagesApi)
-@loginFrm = @{viewDto.loginForm.get}
-@verifyFrm = @{viewDto.verifyMailForm.get}
+@loginFrm = @{
+  viewDto.loginForm.get
+}
+@verifyFrm = @{
+  viewDto.verifyMailForm.get
+}
 @layout(viewDto) {
   <section id="form"><!--form-->
     <div class="container">
@@ -10,7 +14,7 @@
         <div class="col-sm-4 col-sm-offset-1">
           <div class="login-form"><!--login form-->
             <h2>Login to your account</h2>
-            @if(loginFrm.hasErrors){
+            @if(loginFrm.hasErrors) {
               <p class="form-err"><small><i class="fa fa-exclamation-triangle"></i>
                 @messages("error.invalid.emailorpassword")
               </small></p>
@@ -26,7 +30,8 @@
               <button type="submit" class="btn btn-default">Login</button>
             }
             <hr>
-            <a href="@viewDto.instagramAuthUrl.getOrElse("")" class="btn btn-default"><i class="fa fa-instagram"></i> Login with Instagram</a>
+            <a href="@viewDto.instagramAuthUrl.getOrElse("")" class="btn btn-default"><i class="fa fa-instagram"></i>
+              Login with Instagram</a>
           </div><!--/login form-->
         </div>
         <div class="col-sm-1">
@@ -46,5 +51,6 @@
         </div>
       </div>
     </div>
-  </section><!--/form-->
+  </section>
+    <!--/form-->
 }
