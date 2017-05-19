@@ -9,7 +9,7 @@ import play.api.i18n.MessagesApi
 import play.api.mvc.{Controller, Request}
 
 import com.yukihirai0505.sFacebook.Facebook
-import com.yukihirai0505.sFacebook.auth.AccessToken
+import com.yukihirai0505.sFacebook.responses.auth.Oauth
 import configurations.FacebookConfig
 import constants.Constants.SnsType
 import controllers.BaseTrait
@@ -34,11 +34,11 @@ class FacebookService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: E
   def callback(code: String)(implicit req: Request[_]): Future[Option[AccountEntity]] = {
     val account: AccountEntity = SessionUtil.getAccount
     ACCESS_TOKEN(code, req, env).flatMap {
-      case Some(token: AccessToken) =>
-        new Facebook(token).getMe().flatMap {
+      case Some(oauth: Oauth) =>
+        new Facebook(oauth.accessToken).getUser().flatMap {
           case Some(response) =>
             if (account.isLogin) {
-              val newUser = account.user.get.copy(facebookId = Some(response.id), facebookAccessToken = Some(token.token))
+              val newUser = account.user.get.copy(facebookId = Some(response.id), facebookAccessToken = Some(oauth.accessToken))
               update(newUser).flatMap { _ =>
                 SessionUtil.setAccount(account.session, account.copy(user = Some(newUser)))
                 Future successful Some(account)
@@ -79,7 +79,7 @@ class FacebookService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: E
       val user = account.user.get
       val message = frm.get.message
       // TODO: Check the access_token still alive. If it is already dead, redirect facebook auth url.
-      new Facebook(AccessToken(user.facebookAccessToken.get)).publishPost(user.facebookId.get, Some(message)).flatMap { response =>
+      new Facebook(user.facebookAccessToken.get).publishPost(user.facebookId.get, Some(message)).flatMap { response =>
         val splashPostDAO = new SplashPostDAO(dbConfigProvider)
         val postId = response.get.id
         val postIds = postId.split("_")

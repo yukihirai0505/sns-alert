@@ -6,13 +6,8 @@ lazy val root = (project in file("."))
   .enablePlugins(PlayScala)
   .aggregate(sFacebook)
   .dependsOn(sFacebook)
-  //.aggregate(sInstagram)
-  //.dependsOn(sInstagram)
 // Facebook
-lazy val sFacebook = uri("git://github.com/yukihirai0505/sFacebook.git")
-
-// Instagram
-//lazy val sInstagram = RootProject(uri("git://github.com/yukihirai0505/sInstagram#35cdfccb99384fd404e77ceddb72c793086362d8"))
+lazy val sFacebook = uri("git://github.com/yukihirai0505/sFacebook.git#0a90c5fba58bf8fb1a6052107933be486786a76e")
 
 scalaVersion := "2.11.8"
 

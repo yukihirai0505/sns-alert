@@ -1,12 +1,12 @@
 package configurations
 
-import controllers.routes
 import play.api.mvc.{Call, RequestHeader}
 import play.api.{Environment, Mode}
 
 import com.yukihirai0505.sFacebook.FacebookAuth
 import com.yukihirai0505.sFacebook.model.Scope
-import com.yukihirai0505.sFacebook.auth.Auth
+import com.yukihirai0505.sFacebook.responses.auth.Oauth
+import controllers.routes
 import dispatch.Future
 
 /**
@@ -21,11 +21,11 @@ trait FacebookConfig extends Config {
     url.replace("?code=", "")
   }
   private lazy val facebookAuth = new FacebookAuth
-  private lazy val scopes: Seq[Scope] = Seq(Scope.PUBLIC_PROFILE, Scope.PUBLISH_ACTIONS)
+  private lazy val scopes: Seq[Scope] = Seq(Scope.PUBLIC_PROFILE, Scope.PUBLISH_ACTIONS, Scope.USER_POSTS)
   lazy val AUTH_URL: (RequestHeader, Environment) => String = (req: RequestHeader, env: Environment) => {
     facebookAuth.authURL(ID, REDIRECT_URL(req, env), scopes)
   }
-  lazy val ACCESS_TOKEN: (String, RequestHeader, Environment) => Future[Option[Auth]] = (code: String, req: RequestHeader, env: Environment) => {
+  lazy val ACCESS_TOKEN: (String, RequestHeader, Environment) => Future[Option[Oauth]] = (code: String, req: RequestHeader, env: Environment) => {
     facebookAuth.requestToken(ID, SECRET, REDIRECT_URL(req, env), code)
   }
 }
