@@ -24,6 +24,7 @@ $ heroku config:add TWITTER_ACCESS_TOKEN_KEY=
 $ heroku config:add TWITTER_ACCESS_TOKEN_SECRET=
 $ heroku config:add TWITTER_CONSUMER_TOKEN_KEY=
 $ heroku config:add TWITTER_CONSUMER_TOKEN_SECRET=
+$ heroku config:add TZ=Asia/Tokyo
 ```
 
 ## Local
