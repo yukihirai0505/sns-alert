@@ -1,22 +1,25 @@
 package services
 
+import java.io.File
 import javax.inject.Inject
 
 import com.yukihirai0505.sFacebook.Facebook
 import com.yukihirai0505.sFacebook.responses.auth.Oauth
 import configurations.FacebookConfig
+import constants.Constants
 import constants.Constants.SnsType
 import controllers.BaseTrait
 import daos.{SplashPostDAO, UserDAO}
 import forms.FacebookPostForms
 import models.Entities.AccountEntity
-import models.Tables.SplashPostRow
+import models.Tables.{SplashPostRow, UserRow}
 import org.joda.time.DateTime
 import play.api.Environment
 import play.api.cache.CacheApi
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Controller, Request}
+import play.api.libs.Files
+import play.api.mvc.{Controller, MultipartFormData, Request}
 import utils.SessionUtil
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -78,24 +81,44 @@ class FacebookService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: E
       val user = account.user.get
       val message = frm.get.message
       val splashType = frm.get.splashType
+      val multipartReq = req.asInstanceOf[Request[MultipartFormData[Files.TemporaryFile]]]
       try {
-        new Facebook(user.facebookAccessToken.get).publishPost(user.facebookId.get, Some(message)).flatMap { response =>
-          val splashPostDAO = new SplashPostDAO(dbConfigProvider)
-          val postId = response.get.id
-          val postIds = postId.split("_")
-          val link = s"https://www.facebook.com/${postIds(0)}/posts/${postIds(1)}"
-          val now = new DateTime()
-          val newSplashPost = SplashPostRow(
-            userId = user.id.get, postId = postId, message = message, link = link, snsType = SnsType.Facebook.value, postDatetime = now, splashDatetime = now.plusHours(splashType)
-          )
-          splashPostDAO.add(newSplashPost)
-          Future successful Right(true)
-        }
+        val file = multipartReq.body.file(Constants.fileName).get
+        if (file.filename.nonEmpty) publishPhoto(user, message, splashType, file.ref.file)
+        else publishPost(user, message, splashType)
       } catch {
         case e: Exception => Future successful Left(e)
       }
     }
   }
 
+  private def publishPhoto(user: UserRow, message: String, splashType: Int, file: File): Future[Either[Throwable, Boolean]] = {
+    new Facebook(user.facebookAccessToken.get).publishPhotos(user.facebookId.get, message, file).flatMap { response =>
+      val postId = response.get.postId
+      saveSplashPost(user, message, splashType, postId).flatMap { _ =>
+        Future successful Right(true)
+      }
+    }
+  }
+
+  private def publishPost(user: UserRow, message: String, splashType: Int): Future[Either[Throwable, Boolean]] = {
+    new Facebook(user.facebookAccessToken.get).publishPost(user.facebookId.get, Some(message)).flatMap { response =>
+      val postId = response.get.id
+      saveSplashPost(user, message, splashType, postId).flatMap { _ =>
+        Future successful Right(true)
+      }
+    }
+  }
+
+  private def saveSplashPost(user: UserRow, message: String, splashType: Int, postId: String) = {
+    val splashPostDAO = new SplashPostDAO(dbConfigProvider)
+    val postIds = postId.split("_")
+    val link = s"https://www.facebook.com/${postIds(0)}/posts/${postIds(1)}"
+    val now = new DateTime()
+    val newSplashPost = SplashPostRow(
+      userId = user.id.get, postId = postId, message = message, link = link, snsType = SnsType.Facebook.value, postDatetime = now, splashDatetime = now.plusHours(splashType)
+    )
+    splashPostDAO.add(newSplashPost)
+  }
 }
 

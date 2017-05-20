@@ -2,7 +2,7 @@
 @import models.Entities.SplashEntity
 @import models.Tables.SplashPostRow
 @import constants.Constants.SplashType
-@import constants.Constants.SplashType.SplashTypeVal
+@import constants.Constants.fileName
 @(viewDto: ViewDto)(implicit req: RequestHeader)
 
 @splashPosts = @{
@@ -18,7 +18,7 @@
             <div class="row">
               <div class="col-sm-9">
                 <h2>Splash Posts</h2>
-                @helper.form(routes.FacebookC.post()) {
+                @helper.form(routes.FacebookC.post(), 'enctype -> "multipart/form-data", 'method -> "POST") {
                   @helper.CSRF.formField
                   <div class="blank-arrow">
                     <label>Facebook Message</label>
@@ -27,9 +27,11 @@
                     <textarea name="message" cols="30" rows="10"></textarea>
                   </div>
                   <br>
+                  <input type="file" name="@fileName" />
+                  <br>
                   <p>Splash Type</p>
                   @for(splashType <- SplashType.getValues) {
-                    <input type="radio" name="splashType" value="@splashType.value" style="width: initial;"> @splashType.label
+                    <input type="radio" name="splashType" value="@splashType.value" style="width: initial;" @if(splashType.equals(SplashType.Short)){checked="checked"}> @splashType.label
                   }
                   <br>
                   <button type="submit" class="btn btn-primary">Save</button>

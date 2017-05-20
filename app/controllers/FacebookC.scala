@@ -6,7 +6,8 @@ import play.api.Environment
 import play.api.cache.CacheApi
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, Request}
+import play.api.libs.Files
+import play.api.mvc.{Action, MultipartFormData, Request}
 import services.FacebookService
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -38,7 +39,7 @@ class FacebookC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environ
     }
   }
 
-  def post = Action.async { implicit req: Request[_] =>
+  def post: Action[MultipartFormData[Files.TemporaryFile]] = Action.async(parse.multipartFormData) { implicit req: Request[_] =>
     postMessage.flatMap {
       case Right(bool) =>
         if (bool) Future successful Redirect(routes.SplashC.index().url)

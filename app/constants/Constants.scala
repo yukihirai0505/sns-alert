@@ -5,6 +5,8 @@ package constants
   */
 object Constants {
 
+  val fileName = "imageFile"
+
   object SnsType extends Enumeration {
 
     case class SnsTypeVal(value: Byte) extends Val
