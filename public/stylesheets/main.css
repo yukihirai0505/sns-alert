@@ -2388,9 +2388,6 @@ h2.title {
 }
 
 .account-setting-box form input:hover,
-.text-area textarea:hover {
-  border: 1px solid #FE980F;
-}
 
 .text-area {
   margin-top: 66px

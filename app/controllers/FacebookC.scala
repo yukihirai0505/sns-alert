@@ -7,7 +7,6 @@ import play.api.cache.CacheApi
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, Request}
-
 import services.FacebookService
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -41,8 +40,10 @@ class FacebookC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environ
 
   def post = Action.async { implicit req: Request[_] =>
     postMessage.flatMap {
-      case false => Future successful Redirect(routes.LoginC.login().url)
-      case true => Future successful Redirect(routes.SplashC.index().url)
+      case Right(bool) =>
+        if (bool) Future successful Redirect(routes.SplashC.index().url)
+        else Future successful Redirect(routes.LoginC.login().url)
+      case Left(_) => Future successful Redirect(routes.FacebookC.auth().url)
     }
   }
 

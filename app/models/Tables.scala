@@ -27,20 +27,21 @@ trait Tables {
    *  @param link Database column link SqlType(varchar), Length(500,true)
    *  @param snsType Database column sns_type SqlType(int4)
    *  @param postDatetime Database column post_datetime SqlType(timestamp)
+   *  @param splashDatetime Database column splash_datetime SqlType(timestamp)
    *  @param id Database column id SqlType(serial), AutoInc, PrimaryKey */
-  case class SplashPostRow(userId: Long, postId: String, message: String, link: String, snsType: Int, postDatetime: DateTime, id: Option[Int] = None)
+  case class SplashPostRow(userId: Long, postId: String, message: String, link: String, snsType: Int, postDatetime: DateTime, splashDatetime: DateTime, id: Option[Int] = None)
   /** GetResult implicit for fetching SplashPostRow objects using plain SQL queries */
   implicit def GetResultSplashPostRow(implicit e0: GR[Long], e1: GR[String], e2: GR[Int], e3: GR[DateTime], e4: GR[Option[Int]]): GR[SplashPostRow] = GR{
     prs => import prs._
-    val r = (<<?[Int], <<[Long], <<[String], <<[String], <<[String], <<[Int], <<[DateTime])
+    val r = (<<?[Int], <<[Long], <<[String], <<[String], <<[String], <<[Int], <<[DateTime], <<[DateTime])
     import r._
-    SplashPostRow.tupled((_2, _3, _4, _5, _6, _7, _1)) // putting AutoInc last
+    SplashPostRow.tupled((_2, _3, _4, _5, _6, _7, _8, _1)) // putting AutoInc last
   }
   /** Table description of table splash_post. Objects of this class serve as prototypes for rows in queries. */
   class SplashPost(_tableTag: Tag) extends Table[SplashPostRow](_tableTag, "splash_post") {
-    def * = (userId, postId, message, link, snsType, postDatetime, Rep.Some(id)) <> (SplashPostRow.tupled, SplashPostRow.unapply)
+    def * = (userId, postId, message, link, snsType, postDatetime, splashDatetime, Rep.Some(id)) <> (SplashPostRow.tupled, SplashPostRow.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = (Rep.Some(userId), Rep.Some(postId), Rep.Some(message), Rep.Some(link), Rep.Some(snsType), Rep.Some(postDatetime), Rep.Some(id)).shaped.<>({r=>import r._; _1.map(_=> SplashPostRow.tupled((_1.get, _2.get, _3.get, _4.get, _5.get, _6.get, _7)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = (Rep.Some(userId), Rep.Some(postId), Rep.Some(message), Rep.Some(link), Rep.Some(snsType), Rep.Some(postDatetime), Rep.Some(splashDatetime), Rep.Some(id)).shaped.<>({r=>import r._; _1.map(_=> SplashPostRow.tupled((_1.get, _2.get, _3.get, _4.get, _5.get, _6.get, _7.get, _8)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column user_id SqlType(int8) */
     val userId: Rep[Long] = column[Long]("user_id")
@@ -54,6 +55,8 @@ trait Tables {
     val snsType: Rep[Int] = column[Int]("sns_type")
     /** Database column post_datetime SqlType(timestamp) */
     val postDatetime: Rep[DateTime] = column[DateTime]("post_datetime")
+    /** Database column splash_datetime SqlType(timestamp) */
+    val splashDatetime: Rep[DateTime] = column[DateTime]("splash_datetime")
     /** Database column id SqlType(serial), AutoInc, PrimaryKey */
     val id: Rep[Int] = column[Int]("id", O.AutoInc, O.PrimaryKey)
   }

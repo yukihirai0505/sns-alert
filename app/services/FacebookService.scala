@@ -2,12 +2,6 @@ package services
 
 import javax.inject.Inject
 
-import play.api.Environment
-import play.api.cache.CacheApi
-import play.api.db.slick.DatabaseConfigProvider
-import play.api.i18n.MessagesApi
-import play.api.mvc.{Controller, Request}
-
 import com.yukihirai0505.sFacebook.Facebook
 import com.yukihirai0505.sFacebook.responses.auth.Oauth
 import configurations.FacebookConfig
@@ -18,6 +12,11 @@ import forms.FacebookPostForms
 import models.Entities.AccountEntity
 import models.Tables.SplashPostRow
 import org.joda.time.DateTime
+import play.api.Environment
+import play.api.cache.CacheApi
+import play.api.db.slick.DatabaseConfigProvider
+import play.api.i18n.MessagesApi
+import play.api.mvc.{Controller, Request}
 import utils.SessionUtil
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -70,25 +69,30 @@ class FacebookService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: E
     }
   }
 
-  def postMessage(implicit req: Request[_]): Future[Boolean] = {
+  def postMessage(implicit req: Request[_]): Future[Either[Throwable, Boolean]] = {
     val account: AccountEntity = SessionUtil.getAccount
     val frm = FacebookPostForms.facebookPostForm.bindFromRequest()
     if (frm.hasErrors || !account.isLogin) {
-      Future successful false
+      Future successful Right(false)
     } else {
       val user = account.user.get
       val message = frm.get.message
-      // TODO: Check the access_token still alive. If it is already dead, redirect facebook auth url.
-      new Facebook(user.facebookAccessToken.get).publishPost(user.facebookId.get, Some(message)).flatMap { response =>
-        val splashPostDAO = new SplashPostDAO(dbConfigProvider)
-        val postId = response.get.id
-        val postIds = postId.split("_")
-        val link = s"https://www.facebook.com/${postIds(0)}/posts/${postIds(1)}"
-        val newSplashPost = SplashPostRow(
-          userId = user.id.get, postId = postId, message = message, link = link, snsType = SnsType.Facebook.value, postDatetime = new DateTime()
-        )
-        splashPostDAO.add(newSplashPost)
-        Future successful true
+      val splashType = frm.get.splashType
+      try {
+        new Facebook(user.facebookAccessToken.get).publishPost(user.facebookId.get, Some(message)).flatMap { response =>
+          val splashPostDAO = new SplashPostDAO(dbConfigProvider)
+          val postId = response.get.id
+          val postIds = postId.split("_")
+          val link = s"https://www.facebook.com/${postIds(0)}/posts/${postIds(1)}"
+          val now = new DateTime()
+          val newSplashPost = SplashPostRow(
+            userId = user.id.get, postId = postId, message = message, link = link, snsType = SnsType.Facebook.value, postDatetime = now, splashDatetime = now.plusHours(splashType)
+          )
+          splashPostDAO.add(newSplashPost)
+          Future successful Right(true)
+        }
+      } catch {
+        case e: Exception => Future successful Left(e)
       }
     }
   }

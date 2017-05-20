@@ -36,8 +36,8 @@ class GlobalSetting @Inject()(lifecycle: ApplicationLifecycle, env: Environment,
 
     // TODO: send sns search result mail function
     // QuartzSchedulerExtension(system).schedule("AlertMailEveryHour", alertMailActor, "send sns alert mail")
-
     QuartzSchedulerExtension(system).schedule("SplashPostEveryHour", splashPostActor, "splash posts")
+
   }
 
 }

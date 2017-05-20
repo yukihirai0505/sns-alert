@@ -2,13 +2,12 @@ package actors
 
 import javax.inject.Singleton
 
-import play.api.Logger.logger
-import play.api.db.slick.DatabaseConfigProvider
-
 import akka.actor.Actor
 import com.google.inject.Inject
 import com.yukihirai0505.sFacebook.Facebook
 import daos.{SplashPostDAO, UserDAO}
+import play.api.Logger.logger
+import play.api.db.slick.DatabaseConfigProvider
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -29,12 +28,19 @@ class SplashPost @Inject()(dbConfigProvider: DatabaseConfigProvider) extends Spl
             val facebookPostId = post.postId
             userDao.getById(userId).map { user =>
               val accessToken = user.get.facebookAccessToken.get
-              new Facebook(accessToken).deletePost(facebookPostId).flatMap {
-                case Some(r) => Future successful {
-                  if (r.success) delete(postId.get)
-                  else false
-                }
-                case None => Future successful false
+              val facebook = new Facebook(accessToken)
+              facebook.getComments(facebookPostId).flatMap {
+                case Some(comments) =>
+                  if (comments.data.isEmpty)
+                    facebook.deletePost(facebookPostId).flatMap {
+                      case Some(r) => Future successful {
+                        if (r.success) delete(postId.get)
+                        else false
+                      }
+                      case None => Future successful false
+                    }
+                  else delete(postId.get)
+                case None => delete(postId.get)
               }
             }
           }

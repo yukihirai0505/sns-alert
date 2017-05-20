@@ -1,6 +1,8 @@
 @import dtos.ViewDto.ViewDto
 @import models.Entities.SplashEntity
 @import models.Tables.SplashPostRow
+@import constants.Constants.SplashType
+@import constants.Constants.SplashType.SplashTypeVal
 @(viewDto: ViewDto)(implicit req: RequestHeader)
 
 @splashPosts = @{
@@ -15,13 +17,21 @@
           <div class="account-setting-box">
             <div class="row">
               <div class="col-sm-9">
-                <h2>Account Setting</h2>
+                <h2>Splash Posts</h2>
                 @helper.form(routes.FacebookC.post()) {
                   @helper.CSRF.formField
                   <div class="blank-arrow">
                     <label>Facebook Message</label>
                   </div>
-                  <textarea name="message" cols="30" rows="10"></textarea>
+                  <div>
+                    <textarea name="message" cols="30" rows="10"></textarea>
+                  </div>
+                  <br>
+                  <p>Splash Type</p>
+                  @for(splashType <- SplashType.getValues) {
+                    <input type="radio" name="splashType" value="@splashType.value" style="width: initial;"> @splashType.label
+                  }
+                  <br>
                   <button type="submit" class="btn btn-primary">Save</button>
                   <br>
                 }
@@ -32,6 +42,7 @@
                       <th>message</th>
                       <th>link</th>
                       <th>post time</th>
+                      <th>splash time</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -40,6 +51,7 @@
                       <td>@post.message</td>
                       <td><a href="@post.link" target="_blank">Post Link</a></td>
                       <td>@post.postDatetime</td>
+                      <td>@post.splashDatetime</td>
                     </tr>
                   }
                   </tbody>
