@@ -4,10 +4,10 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala)
-  .aggregate(sFacebook)
-  .dependsOn(sFacebook)
+//  .aggregate(sFacebook)
+//  .dependsOn(sFacebook)
 // Facebook
-lazy val sFacebook = uri("git://github.com/yukihirai0505/sFacebook.git#0a90c5fba58bf8fb1a6052107933be486786a76e")
+// lazy val sFacebook = uri("git://github.com/yukihirai0505/sFacebook.git#0a90c5fba58bf8fb1a6052107933be486786a76e")
 
 scalaVersion := "2.11.8"
 
@@ -24,6 +24,8 @@ libraryDependencies ++= {
 
     // Instagram
     "com.yukihirai0505" % "sinstagram_2.11" % "0.0.7",
+    // Facebook
+    "com.yukihirai0505" % "sfacebook_2.11" % "0.0.1",
     // Twitter
     "com.danielasfregola" %% "twitter4s" % "5.0",
 
