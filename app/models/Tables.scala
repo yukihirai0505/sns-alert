@@ -8,17 +8,56 @@ object Tables extends {
 /** Slick data model trait for extension, choice of backend or usage in the cake pattern. (Make sure to initialize this late.) */
 trait Tables {
   val profile: slick.driver.JdbcProfile
-  import profile.api._
   import com.github.tototoshi.slick.MySQLJodaSupport._
   import org.joda.time.DateTime
-  import slick.model.ForeignKeyAction
+  import profile.api._
   // NOTE: GetResult mappers for plain SQL are only generated for tables where Slick knows how to map the types of all columns.
   import slick.jdbc.{GetResult => GR}
 
   /** DDL for all tables. Call .create to execute. */
-  lazy val schema: profile.SchemaDescription = SplashPost.schema ++ User.schema
+  lazy val schema: profile.SchemaDescription = ReserveInstagramPost.schema ++ SplashPost.schema ++ User.schema
   @deprecated("Use .schema instead of .ddl", "3.0")
   def ddl = schema
+
+  /** Entity class storing rows of table ReserveInstagramPost
+   *  @param username Database column username SqlType(varchar), Length(100,true)
+   *  @param password Database column password SqlType(varchar), Length(100,true)
+   *  @param caption Database column caption SqlType(varchar), Length(500,true)
+   *  @param filename Database column filename SqlType(varchar), Length(500,true)
+   *  @param postDatetime Database column post_datetime SqlType(timestamp)
+   *  @param reserveDatetime Database column reserve_datetime SqlType(timestamp)
+   *  @param id Database column id SqlType(serial), AutoInc, PrimaryKey */
+  case class ReserveInstagramPostRow(username: String, password: String, caption: String, filename: String, postDatetime: DateTime, reserveDatetime: DateTime, id: Option[Int] = None)
+  /** GetResult implicit for fetching ReserveInstagramPostRow objects using plain SQL queries */
+  implicit def GetResultReserveInstagramPostRow(implicit e0: GR[String], e1: GR[DateTime], e2: GR[Option[Int]]): GR[ReserveInstagramPostRow] = GR{
+    prs => import prs._
+    val r = (<<?[Int], <<[String], <<[String], <<[String], <<[String], <<[DateTime], <<[DateTime])
+    import r._
+    ReserveInstagramPostRow.tupled((_2, _3, _4, _5, _6, _7, _1)) // putting AutoInc last
+  }
+  /** Table description of table reserve_instagram_post. Objects of this class serve as prototypes for rows in queries. */
+  class ReserveInstagramPost(_tableTag: Tag) extends Table[ReserveInstagramPostRow](_tableTag, "reserve_instagram_post") {
+    def * = (username, password, caption, filename, postDatetime, reserveDatetime, Rep.Some(id)) <> (ReserveInstagramPostRow.tupled, ReserveInstagramPostRow.unapply)
+    /** Maps whole row to an option. Useful for outer joins. */
+    def ? = (Rep.Some(username), Rep.Some(password), Rep.Some(caption), Rep.Some(filename), Rep.Some(postDatetime), Rep.Some(reserveDatetime), Rep.Some(id)).shaped.<>({r=>import r._; _1.map(_=> ReserveInstagramPostRow.tupled((_1.get, _2.get, _3.get, _4.get, _5.get, _6.get, _7)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+
+    /** Database column username SqlType(varchar), Length(100,true) */
+    val username: Rep[String] = column[String]("username", O.Length(100,varying=true))
+    /** Database column password SqlType(varchar), Length(100,true) */
+    val password: Rep[String] = column[String]("password", O.Length(100,varying=true))
+    /** Database column caption SqlType(varchar), Length(500,true) */
+    val caption: Rep[String] = column[String]("caption", O.Length(500,varying=true))
+    /** Database column filename SqlType(varchar), Length(500,true) */
+    val filename: Rep[String] = column[String]("filename", O.Length(500,varying=true))
+    /** Database column post_datetime SqlType(timestamp) */
+    val postDatetime: Rep[DateTime] = column[DateTime]("post_datetime")
+    /** Database column reserve_datetime SqlType(timestamp) */
+    val reserveDatetime: Rep[DateTime] = column[DateTime]("reserve_datetime")
+    /** Database column id SqlType(serial), AutoInc, PrimaryKey */
+    val id: Rep[Int] = column[Int]("id", O.AutoInc, O.PrimaryKey)
+  }
+  /** Collection-like TableQuery object for table ReserveInstagramPost */
+  lazy val ReserveInstagramPost = new TableQuery(tag => new ReserveInstagramPost(tag))
 
   /** Entity class storing rows of table SplashPost
    *  @param userId Database column user_id SqlType(int8)

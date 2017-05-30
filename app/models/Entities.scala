@@ -1,6 +1,6 @@
 package models
 
-import models.Tables.{SplashPostRow, UserRow}
+import models.Tables.{ReserveInstagramPostRow, SplashPostRow, UserRow}
 
 /**
   * author Yuki Hirai on 2017/03/21.
@@ -28,6 +28,10 @@ object Entities {
 
   case class SplashEntity(
                            splashPosts: Option[Seq[SplashPostRow]] = None
+                         ) extends BaseEntity
+
+  case class iPostEntity(
+                           reservePosts: Option[Seq[ReserveInstagramPostRow]] = None
                          ) extends BaseEntity
 
 }

@@ -4,7 +4,6 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.MessagesApi
 
-
 /**
   * Created by yukihirai on 2017/03/20.
   */
@@ -53,5 +52,19 @@ object FacebookPostForms extends CustomValidate {
       "message" -> text
       , "splashType" -> number
     )(FacebookPostForms.apply)(FacebookPostForms.unapply)
+  )
+}
+
+object ReserveInstagramPostForms extends CustomValidate {
+
+  case class ReserveInstagramPostForms(username: String, password: String, caption: String, reserveTime: String)(implicit messagesApi: MessagesApi)
+
+  def postForms(implicit messagesApi: MessagesApi) = Form(
+    mapping(
+      "username" -> text
+      , "password" -> text
+      , "caption" -> text
+      , "reserveTime" -> text
+    )(ReserveInstagramPostForms.apply)(ReserveInstagramPostForms.unapply)
   )
 }

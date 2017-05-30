@@ -27,3 +27,16 @@ CREATE TABLE "splash_post"
   post_datetime TIMESTAMP    NOT NULL,
   splash_datetime TIMESTAMP  NOT NULL
 );
+
+CREATE TABLE "reserve_instagram_post"
+(
+  id            SERIAL       NOT NULL
+    CONSTRAINT reserve_instagram_post_pkey
+    PRIMARY KEY,
+  username      VARCHAR(100) NOT NULL,
+  password      VARCHAR(100) NOT NULL,
+  caption       VARCHAR(500) NOT NULL,
+  filename      VARCHAR(500) NOT NULL,
+  post_datetime TIMESTAMP  NOT NULL,
+  reserve_datetime TIMESTAMP    NOT NULL
+);

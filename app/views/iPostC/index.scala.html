@@ -1,0 +1,67 @@
+@import dtos.ViewDto.ViewDto
+@import models.Entities.iPostEntity
+@import models.Tables.ReserveInstagramPostRow
+@import constants.Constants.fileName
+@(viewDto: ViewDto)(implicit req: RequestHeader)
+
+@posts = @{
+  viewDto.pageEntity.flatMap(x => x.asInstanceOf[iPostEntity].reservePosts).getOrElse(Seq.empty[ReserveInstagramPostRow])
+}
+
+@layout(viewDto) {
+  <section id="form"><!--form-->
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-9">
+          <div class="account-setting-box">
+            <div class="row">
+              <div class="col-sm-9">
+                <h2>Instagram Reserve Post</h2>
+                @helper.form(routes.iPostC.reserve(), 'enctype -> "multipart/form-data", 'method -> "POST") {
+                  @helper.CSRF.formField
+                  <input type="text" name="username" placeholder="Instagram Username" />
+                  <input type="password" name="password" placeholder="Instagram Password"/>
+                  <div class="blank-arrow">
+                    <label>Caption Message</label>
+                  </div>
+                  <div>
+                    <textarea name="caption" cols="30" rows="10"></textarea>
+                  </div>
+                  <br>
+                  <input type="datetime-local" name="reserveTime">
+                  <br>
+                  <input type="file" name="@fileName" />
+                  <br>
+                  <button type="submit" class="btn btn-primary">Save</button>
+                  <br>
+                }
+                <h2 style="margin-top: 40px;">Reserve posts</h2>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>username</th>
+                      <th>caption</th>
+                      <th>post datetime</th>
+                      <th>reserve datetime</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for(post <- posts) {
+                      <tr>
+                        <td>@post.username</td>
+                        <td>@post.caption</td>
+                        <td>@post.postDatetime</td>
+                        <td>@post.reserveDatetime</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div><!--/account setting box-->
+        </div>
+      </div>
+    </div>
+  </section>
+    <!--/form-->
+}

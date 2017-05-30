@@ -4,10 +4,10 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala)
-//  .aggregate(sFacebook)
-//  .dependsOn(sFacebook)
-// Facebook
-//lazy val sFacebook = uri("git://github.com/yukihirai0505/sFacebook.git#5b209f4ad7f7ff4def692be90b0d715c73b12f98")
+  //.aggregate(iPost)
+  //.dependsOn(iPost)
+// iPost
+//lazy val iPost = uri("git://github.com/yukihirai0505/iPost.git#5227a452374f2e1301a758599df6df45d35514ef")
 
 scalaVersion := "2.11.8"
 
@@ -22,8 +22,10 @@ libraryDependencies ++= {
     // Akka
     "com.enragedginger" %% "akka-quartz-scheduler" % "1.6.0-akka-2.4.x",
 
+    // iPost
+    "com.yukihirai0505" % "ipost_2.11" % "1.1",
     // Instagram
-    "com.yukihirai0505" % "sinstagram_2.11" % "0.0.7",
+    "com.yukihirai0505" % "sinstagram_2.11" % "0.0.9",
     // Facebook
     "com.yukihirai0505" % "sfacebook_2.11" % "0.0.2",
     // Twitter

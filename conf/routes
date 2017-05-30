@@ -21,6 +21,11 @@ POST    /mypage/delete              controllers.MyPageC.delete
 GET     /instagram/callback         controllers.InstagramC.callback(code: String)
 GET     /instagram/remove           controllers.InstagramC.remove
 
+## iPost
+GET     /ipost                      controllers.iPostC.index
+POST    /ipost/reserve              controllers.iPostC.reserve
+GET     /ipost/post                 controllers.iPostC.post
+
 ## Facebook
 GET     /facebook/auth              controllers.FacebookC.auth
 GET     /facebook/callback          controllers.FacebookC.callback(code: String)
