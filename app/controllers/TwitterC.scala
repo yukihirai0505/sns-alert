@@ -5,9 +5,11 @@ import javax.inject._
 import play.api.Environment
 import play.api.cache.CacheApi
 import play.api.db.slick.DatabaseConfigProvider
+import play.api.libs.json.Json
 import play.api.mvc._
 
 import com.danielasfregola.twitter4s.TwitterRestClient
+import models.TwitterUserInfo
 import services.InstagramService
 
 import scala.concurrent.duration.Duration
@@ -24,7 +26,7 @@ class TwitterC @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Environm
     try {
       val restClient = TwitterRestClient()
       val result = Await.result(restClient.user(screen_name = name), Duration.Inf)
-      Future successful Ok("{ \"follower_count\": " + result.data.followers_count + " }")
+      Future successful Ok(Json.toJson(TwitterUserInfo(result.data.followers_count, result.data.`protected`)))
     } catch {
       case e: Exception => Future successful InternalServerError("{\"error\": \"error occured\"}")
     }
