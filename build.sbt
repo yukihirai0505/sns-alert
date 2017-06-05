@@ -23,7 +23,7 @@ libraryDependencies ++= {
     "com.enragedginger" %% "akka-quartz-scheduler" % "1.6.0-akka-2.4.x",
 
     // iPost
-    "com.yukihirai0505" % "ipost_2.11" % "1.1",
+    "com.yukihirai0505" % "ipost_2.11" % "1.2",
     // Instagram
     "com.yukihirai0505" % "sinstagram_2.11" % "0.0.9",
     // Facebook

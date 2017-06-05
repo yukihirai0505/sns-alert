@@ -10,7 +10,7 @@ import play.api.i18n.MessagesApi
 import play.api.libs.Files
 import play.api.mvc.{Controller, MultipartFormData, Request}
 
-import com.yukihirai0505.iPost.iPost
+import com.yukihirai0505.iPost.iPostNatural
 import constants.Constants
 import controllers.BaseTrait
 import daos.ReserveInstagramPostDAO
@@ -65,13 +65,9 @@ class iPostService @Inject()(dbConfigProvider: DatabaseConfigProvider, env: Envi
   def postToInstagram: Future[Unit] = {
     getPostList.flatMap { posts =>
       posts.foreach { post =>
-        val iPost = new iPost(post.username, post.password)
-        iPost.login().flatMap { cookies =>
-          iPost.mediaUpload(new File(s"/tmp/${post.filename}"), cookies).flatMap { mediaId =>
-            iPost.mediaConfigure(mediaId.get, post.caption, cookies).flatMap { _ =>
-              Future successful delete(post.id.get)
-            }
-          }
+        val iPostNatural = new iPostNatural(post.username, post.password)
+        iPostNatural.postNaturalWays(new File(s"/tmp/${post.filename}"), post.caption).flatMap { _ =>
+          Future successful delete(post.id.get)
         }
       }
       Future successful Unit
