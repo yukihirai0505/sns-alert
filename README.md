@@ -46,5 +46,5 @@ please use ddl at `conf/evolutions.default/*.sql`
 
 ```
 $ cp env.text.default env.text # set env
-$ eval (env.text)
+$ eval $(cat env.text)
 ```
